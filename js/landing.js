@@ -3,7 +3,7 @@
    ============================================================ */
 
 /* ---- CONFIG: Pegá tu URL de Google Apps Script acá ---- */
-const GOOGLE_SCRIPT_URL = 'TU_URL_DE_APPS_SCRIPT_AQUI';
+const GOOGLE_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbwNchgeM586c40r4c1Qulz_ROAYoZBE_2VVCa0DqooMFV1OpmqgjpSr3cviSSR7eNk1/exec';
 
 document.addEventListener('DOMContentLoaded', () => {
   createParticles();
