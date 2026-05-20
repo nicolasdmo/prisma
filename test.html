@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Tu test — PRISMA</title>
+
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=Space+Grotesk:wght@400;500;700&display=swap" rel="stylesheet">
+
+  <!-- CSS -->
+  <link rel="stylesheet" href="css/global.css">
+  <link rel="stylesheet" href="css/quiz.css">
+
+  <style>
+    /* Score bars (inline for resultado.js reuse) */
+    .score-bar-item {
+      margin-bottom: 16px;
+    }
+    .score-bar-labels {
+      display: flex;
+      justify-content: space-between;
+      font-size: 0.78rem;
+      color: rgba(240,240,255,0.5);
+      margin-bottom: 6px;
+    }
+    .score-bar-track {
+      display: flex;
+      height: 6px;
+      border-radius: 3px;
+      overflow: hidden;
+      background: rgba(255,255,255,0.06);
+    }
+    .score-bar-left, .score-bar-right {
+      height: 100%;
+      transition: width 1s ease;
+    }
+    .score-bar-pcts {
+      display: flex;
+      justify-content: space-between;
+      font-size: 0.72rem;
+      margin-top: 4px;
+    }
+  </style>
+</head>
+<body class="quiz-body eje-1">
+
+  <!-- ======== INTRO SCREEN ======== -->
+  <div id="intro-screen" class="intro-screen">
+    <div class="particles" id="particles-intro"></div>
+
+    <div class="intro-icon">🔮</div>
+
+    <h1>
+      Hola, <span id="nombre-intro" class="gradient-text">viajero</span><br>
+      Tu test te espera
+    </h1>
+
+    <p>
+      16 preguntas. Sin respuestas correctas.<br>
+      Solo elegís con qué te identificás más.
+    </p>
+
+    <div style="display:flex;flex-direction:column;align-items:center;gap:12px;width:100%;max-width:320px">
+      <button id="btn-start-audio" class="btn-primary btn-full">
+        🎵 Empezar con música
+      </button>
+      <button id="btn-skip-audio" class="audio-btn">
+        🔇 Empezar sin sonido
+      </button>
+    </div>
+
+    <p style="font-size:0.8rem;color:rgba(255,255,255,0.2)">
+      La música evoluciona con tus respuestas
+    </p>
+  </div>
+
+  <!-- ======== QUIZ SCREEN ======== -->
+  <div id="quiz-screen" class="hidden" style="display:flex;flex-direction:column;min-height:100vh">
+
+    <!-- Progress bar -->
+    <div class="progress-bar-container">
+      <div class="progress-bar-fill" id="progress-fill" style="width:0%"></div>
+    </div>
+
+    <!-- Nav -->
+    <div class="quiz-nav">
+      <div class="quiz-logo">◈ PRISMA</div>
+      <div style="display:flex;align-items:center;gap:16px">
+        <span class="quiz-greeting" id="quiz-greeting"></span>
+        <span class="quiz-progress-info" id="progress-text">
+          <span>1</span> / 16
+        </span>
+        <button id="audio-toggle" class="audio-btn" title="Activar sonido" style="padding:6px 10px;font-size:1rem;">
+          🔇
+        </button>
+      </div>
+    </div>
+
+    <!-- Main quiz area -->
+    <div class="quiz-main">
+      <div id="question-card" class="question-card glass-card" style="padding:40px;">
+
+        <!-- Question header: eje badge + timer -->
+        <div class="question-header">
+          <span class="eje-badge" id="eje-badge">⚡ ENERGÍA</span>
+
+          <div class="timer-container">
+            <div class="timer-ring-wrap">
+              <svg class="timer-ring" viewBox="0 0 52 52">
+                <circle class="timer-ring-bg" cx="26" cy="26" r="20"/>
+                <circle
+                  class="timer-ring-progress"
+                  id="timer-progress"
+                  cx="26" cy="26" r="20"
+                  stroke-dasharray="126"
+                  stroke-dashoffset="0"
+                />
+              </svg>
+              <div class="timer-number" id="timer-number">30</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Question content -->
+        <span class="question-emoji" id="question-emoji">🌅</span>
+        <p  class="question-text"  id="question-text">Cargando pregunta...</p>
+
+        <!-- Answer options -->
+        <div class="options-grid" id="options-grid">
+          <!-- Generado por JS -->
+        </div>
+      </div>
+    </div>
+
+    <!-- Footer with next button -->
+    <div class="quiz-footer">
+      <button id="btn-siguiente" class="btn-siguiente">
+        Siguiente →
+      </button>
+    </div>
+
+  </div>
+
+  <!-- Scripts (orden importa) -->
+  <script src="js/data.js"></script>
+  <script src="js/scoring.js"></script>
+  <script src="js/audio.js"></script>
+  <script src="js/quiz.js"></script>
+
+  <script>
+    // Set name in intro
+    const params = new URLSearchParams(window.location.search);
+    const nombre = params.get('nombre');
+    const el = document.getElementById('nombre-intro');
+    if (el && nombre) el.textContent = nombre;
+
+    // Mini particles for intro
+    const c = document.getElementById('particles-intro');
+    if (c) {
+      for (let i = 0; i < 30; i++) {
+        const p = document.createElement('div');
+        p.className = 'particle';
+        p.style.cssText = `
+          left:${Math.random()*100}%;top:${Math.random()*100}%;
+          width:${Math.random()*3+1}px;height:${Math.random()*3+1}px;
+          animation-delay:${Math.random()*8}s;
+          animation-duration:${Math.random()*6+6}s;
+          opacity:${Math.random()*0.3+0.1};
+        `;
+        c.appendChild(p);
+      }
+    }
+  </script>
+</body>
+</html>

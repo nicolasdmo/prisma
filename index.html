@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>PRISMA — Descubrí quién sos realmente</title>
+  <meta name="description" content="16 arquetipos de personalidad. Descubrí el tuyo en 16 preguntas. Completamente gratis.">
+
+  <!-- Open Graph (preview al compartir el link) -->
+  <meta property="og:title"       content="PRISMA — ¿Cuál es tu arquetipo?">
+  <meta property="og:description" content="Descubrí tu tipo de mente en 16 preguntas. 16 arquetipos únicos. Compartí tu resultado.">
+  <meta property="og:image"       content="assets/og/og-image.png">
+  <meta property="og:type"        content="website">
+  <meta name="twitter:card"       content="summary_large_image">
+
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&family=Space+Grotesk:wght@400;500;700&display=swap" rel="stylesheet">
+
+  <!-- CSS -->
+  <link rel="stylesheet" href="css/global.css">
+  <link rel="stylesheet" href="css/landing.css">
+</head>
+<body>
+
+  <!-- Particles background -->
+  <div class="particles" id="particles"></div>
+
+  <!-- Navigation -->
+  <nav class="nav">
+    <div class="nav-logo">◈ PRISMA</div>
+    <a href="#empezar" class="badge" style="cursor:pointer">Hacer el test →</a>
+  </nav>
+
+  <!-- ======== HERO ======== -->
+  <section class="hero">
+    <div class="hero-bg"></div>
+    <div class="hero-content">
+      <div class="badge">✨ Test de personalidad · 16 arquetipos · 5 minutos</div>
+
+      <h1 class="hero-title">
+        Descubrí quién sos<br>
+        <span class="gradient-text">realmente</span>
+      </h1>
+
+      <p class="hero-subtitle">
+        Un test de personalidad que va más allá de las etiquetas.<br>
+        Descubrí tu arquetipo, tus fortalezas reales y cómo multiplicar tu impacto.
+      </p>
+
+      <a href="#empezar" class="btn-primary">
+        <span>Quiero descubrir mi arquetipo</span>
+        <span>→</span>
+      </a>
+
+      <div class="hero-stats">
+        <div class="stat">
+          <span>16</span>
+          arquetipos únicos
+        </div>
+        <div class="stat">
+          <span>5</span>
+          minutos
+        </div>
+        <div class="stat">
+          <span>100%</span>
+          gratuito
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ======== CÓMO FUNCIONA ======== -->
+  <section class="como-funciona">
+    <div class="section-inner">
+      <div class="section-header">
+        <h2>¿Cómo funciona?</h2>
+        <p class="section-subtitle">Simple. Rápido. Sorprendentemente preciso.</p>
+      </div>
+      <div class="steps">
+        <div class="step">
+          <div class="step-number">01</div>
+          <div class="step-icon">📝</div>
+          <h3>Respondé 16 preguntas</h3>
+          <p>Situaciones reales, sin respuestas correctas. Solo elegís con qué te identificás más.</p>
+        </div>
+        <div class="step">
+          <div class="step-number">02</div>
+          <div class="step-icon">🔮</div>
+          <h3>El algoritmo te descifra</h3>
+          <p>4 ejes de análisis basados en psicología. Tu resultado es uno de 16 arquetipos posibles.</p>
+        </div>
+        <div class="step">
+          <div class="step-number">03</div>
+          <div class="step-icon">✨</div>
+          <h3>Descubrí tu Prisma</h3>
+          <p>Fortalezas, zonas de crecimiento, referentes históricos. Compartí tu resultado en redes.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ======== ARQUETIPOS PREVIEW ======== -->
+  <section>
+    <div class="section-inner arquetipos-section">
+      <div class="section-header">
+        <h2>Los 16 arquetipos</h2>
+        <p class="section-subtitle">¿Cuál sos vos?</p>
+      </div>
+      <div class="arquetipos-grid" id="arquetipos-grid">
+        <!-- Generado por JS -->
+      </div>
+    </div>
+  </section>
+
+  <!-- ======== FORM ======== -->
+  <section class="form-section" id="empezar">
+    <div class="form-card glass-card">
+      <div class="form-header">
+        <h2>¿Listo para descubrir<br>tu arquetipo?</h2>
+        <p>Ingresá tus datos para empezar el test y recibir tu análisis completo por mail</p>
+      </div>
+
+      <form id="form-inicio" class="form" autocomplete="off">
+        <div class="form-group">
+          <label for="nombre">¿Cómo te llamás?</label>
+          <input
+            type="text"
+            id="nombre"
+            name="nombre"
+            placeholder="Tu nombre"
+            required
+            autocomplete="given-name"
+          >
+        </div>
+        <div class="form-group">
+          <label for="email">Tu email <span style="font-size:0.75rem;opacity:0.6">(te enviamos tu análisis completo)</span></label>
+          <input
+            type="email"
+            id="email"
+            name="email"
+            placeholder="tu@email.com"
+            required
+            autocomplete="email"
+          >
+        </div>
+
+        <button type="submit" class="btn-primary btn-full">
+          <span class="btn-text">Descubrir mi arquetipo →</span>
+          <span class="btn-loading hidden">Preparando tu test...</span>
+        </button>
+
+        <p class="form-disclaimer">🔒 Sin spam. Sin suscripciones pagas. Solo tu resultado.</p>
+      </form>
+    </div>
+  </section>
+
+  <!-- ======== FOOTER ======== -->
+  <footer class="footer">
+    <div class="footer-logo">◈ PRISMA</div>
+    <p>Descubrí quién sos realmente</p>
+  </footer>
+
+  <!-- Scripts -->
+  <script src="js/landing.js"></script>
+</body>
+</html>
