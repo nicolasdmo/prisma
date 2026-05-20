@@ -1,0 +1,51 @@
+@import "tailwindcss";
+
+:root {
+  --bg:        #F4F1EA;
+  --bg-elev:   #FBF9F4;
+  --bg-card:   #FFFFFF;
+  --ink:       #16140F;
+  --ink-soft:  #3D3A33;
+  --ink-mute:  #8A857B;
+  --ink-faint: #C2BDB1;
+  --line:      #DDD7C8;
+  --line-soft: #E8E3D5;
+}
+
+*, *::before, *::after { box-sizing: border-box; }
+
+html { scroll-behavior: smooth; }
+
+body {
+  background: var(--bg);
+  color: var(--ink);
+  -webkit-font-smoothing: antialiased;
+}
+
+::selection { background: rgba(22,20,15,0.12); }
+
+::-webkit-scrollbar { width: 5px; }
+::-webkit-scrollbar-track { background: var(--bg); }
+::-webkit-scrollbar-thumb { background: var(--line); border-radius: 3px; }
+
+.eyebrow {
+  font-family: "Geist Mono", monospace;
+  font-size: 11px;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--ink-mute);
+}
+
+.progress-track {
+  height: 1px;
+  background: var(--line);
+  flex: 1;
+  position: relative;
+  overflow: hidden;
+}
+.progress-fill {
+  position: absolute;
+  top: 0; left: 0; height: 100%;
+  background: var(--ink);
+  transition: width 0.6s cubic-bezier(0.65, 0, 0.35, 1);
+}

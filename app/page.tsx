@@ -1,0 +1,103 @@
+import Link from 'next/link';
+import PrismIcon from '@/components/PrismIcon';
+import { ARCHETYPES } from '@/data/archetypes';
+
+const ARCHETYPE_LIST = Object.values(ARCHETYPES);
+
+export default function LandingPage() {
+  return (
+    <main className="flex flex-col min-h-screen">
+      {/* ── Hero ─────────────────────────────────────────────── */}
+      <section className="flex flex-col items-center justify-center flex-1 px-6 pt-20 pb-16 text-center">
+
+        <p className="eyebrow mb-8">Prisma · Test de personalidad</p>
+
+        <PrismIcon size={100} className="text-ink mb-8" />
+
+        <h1
+          className="font-serif text-5xl sm:text-6xl md:text-7xl text-ink leading-tight mb-6"
+          style={{ fontFamily: 'var(--font-serif)' }}
+        >
+          Descubrí quién<br />sos de verdad.
+        </h1>
+
+        <p className="text-ink-soft text-lg sm:text-xl max-w-md mb-10 leading-relaxed">
+          16 preguntas. Sin etiquetas. Tu mapa interior — con el arquetipo exacto que te define.
+        </p>
+
+        <Link
+          href="/test"
+          className="inline-flex items-center gap-2 bg-ink text-bg-card px-8 py-4 rounded-pill text-sm font-mono tracking-widest uppercase hover:opacity-80 transition-opacity"
+        >
+          Empezar el test
+        </Link>
+
+        <p className="mt-5 text-ink-faint font-mono text-xs tracking-wider">
+          ~3 min · 16 preguntas · 16 arquetipos
+        </p>
+      </section>
+
+      {/* ── Divider ──────────────────────────────────────────── */}
+      <div className="h-px bg-line mx-6 sm:mx-16" />
+
+      {/* ── How it works ─────────────────────────────────────── */}
+      <section className="py-16 px-6 max-w-content mx-auto w-full">
+        <p className="eyebrow text-center mb-12">Cómo funciona</p>
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-8">
+          {[
+            { n: '01', title: 'Respondé', text: 'Dieciséis dilemas concretos. Nada de "depende". Elegís el que más te representa.' },
+            { n: '02', title: 'Procesamos', text: 'Tu patrón de respuestas activa uno de los 16 arquetipos posibles.' },
+            { n: '03', title: 'Descubrís', text: 'Tu perfil completo: descripción, fortalezas, zona de crecimiento y referentes.' },
+          ].map(({ n, title, text }) => (
+            <div key={n} className="flex flex-col gap-3">
+              <span className="font-mono text-xs text-ink-faint tracking-wider">{n}</span>
+              <h3 className="font-serif text-2xl text-ink" style={{ fontFamily: 'var(--font-serif)' }}>{title}</h3>
+              <p className="text-ink-mute text-sm leading-relaxed">{text}</p>
+            </div>
+          ))}
+        </div>
+      </section>
+
+      {/* ── Divider ──────────────────────────────────────────── */}
+      <div className="h-px bg-line mx-6 sm:mx-16" />
+
+      {/* ── Archetype grid ───────────────────────────────────── */}
+      <section className="py-16 px-6 max-w-content mx-auto w-full">
+        <p className="eyebrow text-center mb-3">Los 16 arquetipos</p>
+        <p className="text-center text-ink-mute text-sm mb-10">¿En cuál te reconocés?</p>
+        <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
+          {ARCHETYPE_LIST.map((a) => (
+            <div
+              key={a.code}
+              className="bg-bg-elev border border-line rounded-md px-4 py-4 flex flex-col gap-1"
+            >
+              <span className="text-xl">{a.emoji}</span>
+              <span className="font-serif text-base text-ink" style={{ fontFamily: 'var(--font-serif)' }}>{a.name}</span>
+              <span className="font-mono text-[10px] text-ink-faint tracking-widest uppercase">{a.code}</span>
+            </div>
+          ))}
+        </div>
+      </section>
+
+      {/* ── Footer CTA ───────────────────────────────────────── */}
+      <section className="py-16 px-6 text-center border-t border-line">
+        <h2 className="font-serif text-3xl sm:text-4xl text-ink mb-6" style={{ fontFamily: 'var(--font-serif)' }}>
+          ¿Listo para descubrirlo?
+        </h2>
+        <Link
+          href="/test"
+          className="inline-flex items-center gap-2 bg-ink text-bg-card px-8 py-4 rounded-pill text-sm font-mono tracking-widest uppercase hover:opacity-80 transition-opacity"
+        >
+          Empezar ahora
+        </Link>
+      </section>
+
+      {/* ── Footer ───────────────────────────────────────────── */}
+      <footer className="py-6 px-6 border-t border-line-soft text-center">
+        <p className="font-mono text-xs text-ink-faint tracking-wider">
+          PRISMA · {new Date().getFullYear()}
+        </p>
+      </footer>
+    </main>
+  );
+}
