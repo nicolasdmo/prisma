@@ -2,6 +2,7 @@
 
 import { useState, useCallback } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
+import { track } from '@vercel/analytics';
 import { useRouter } from 'next/navigation';
 import { QUESTIONS } from '@/data/questions';
 import { computeCode, computeScores, type Answers, type AnswerLetter } from '@/lib/scoring';
@@ -38,6 +39,7 @@ export default function TestRunner() {
           const code   = computeCode(newAnswers);
           const scores = computeScores(newAnswers);
           try { localStorage.setItem('prisma_scores', JSON.stringify(scores)); } catch {}
+          track('test_completed', { code });
           router.push(`/r/${code}`);
         } else {
           setDirection(1);

@@ -1,5 +1,6 @@
 import type { Metadata } from 'next';
 import { ARCHETYPES } from '@/data/archetypes';
+import { SITE_URL } from '@/lib/config';
 
 interface Props {
   params: Promise<{ code: string }>;
@@ -18,8 +19,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     };
   }
 
-  const base = process.env.NEXT_PUBLIC_BASE_URL ?? 'https://prisma.vercel.app';
-  const url  = `${base}/r/${code}`;
+  const url = `${SITE_URL}/r/${code}`;
 
   return {
     title: `${archetype.name} — PRISMA`,

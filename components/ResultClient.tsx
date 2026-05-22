@@ -2,8 +2,10 @@
 
 import { useState, useEffect, useCallback, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
+import { track } from '@vercel/analytics';
 import Link from 'next/link';
 import { ARCHETYPES, type Archetype } from '@/data/archetypes';
+import { PRICE_DISPLAY } from '@/lib/config';
 import GoogleAuthGate from '@/components/GoogleAuthGate';
 import ShareCard from '@/components/ShareCard';
 
@@ -389,12 +391,23 @@ function ScrollHint({ color }: { color: string }) {
   }, []);
 
   useEffect(() => {
-    const t = setTimeout(() => {
-      // Show indicator
-      setVisible(true);
-      activeRef.current = true;
+    let hideTimer: ReturnType<typeof setTimeout>;
 
-      // Continuous scroll — 2 px/frame ≈ 120 px/s
+    const t = setTimeout(() => {
+      setVisible(true);
+      activeRef.current = true; // user interaction now dismisses the hint
+
+      // Respect users who prefer reduced motion — no auto-scroll for them
+      const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+      if (reduceMotion) {
+        hideTimer = setTimeout(() => {
+          activeRef.current = false;
+          setGone(true);
+        }, 6000);
+        return;
+      }
+
+      // Continuous scroll — 10 px/frame ≈ 600 px/s
       const tick = () => {
         if (!activeRef.current) return;
         const max = document.documentElement.scrollHeight - window.innerHeight;
@@ -404,17 +417,18 @@ function ScrollHint({ color }: { color: string }) {
           setGone(true);
           return;
         }
-        window.scrollBy(0, 2);
+        window.scrollBy(0, 10);
         rafRef.current = requestAnimationFrame(tick);
       };
       rafRef.current = requestAnimationFrame(tick);
 
       // Hide indicator after 3 s; scroll keeps going
-      setTimeout(() => setVisible(false), 3000);
+      hideTimer = setTimeout(() => setVisible(false), 3000);
     }, 1200);
 
     return () => {
       clearTimeout(t);
+      clearTimeout(hideTimer);
       cancelAnimationFrame(rafRef.current);
       activeRef.current = false;
     };
@@ -498,6 +512,7 @@ export default function ResultClient({ code }: { code: string }) {
 
   const handleUnlock = useCallback((_email: string, _name: string) => {
     localStorage.setItem('prisma_unlocked', code.toUpperCase());
+    track('result_unlocked', { code: code.toUpperCase() });
     setUnlocked(true);
   }, [code]);
 
@@ -844,7 +859,7 @@ export default function ResultClient({ code }: { code: string }) {
                           animation: 'price-pop 0.6s cubic-bezier(0.34,1.56,0.64,1) 0.5s both',
                         }}
                       >
-                        $9.999
+                        {PRICE_DISPLAY}
                       </p>
                       <p className="font-mono text-[10px]" style={{ color: '#8a857b' }}>ARS · pago único</p>
                     </div>

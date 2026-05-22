@@ -1,12 +1,17 @@
 import { ImageResponse } from 'next/og';
-import { ARCHETYPES } from '@/data/archetypes';
+import { ARCHETYPES, ARCHETYPE_CODES } from '@/data/archetypes';
 
-export const runtime = 'edge';
-export const size    = { width: 1200, height: 630 };
+export const size        = { width: 1200, height: 630 };
 export const contentType = 'image/png';
 
-export default async function OgImage({ params }: { params: { code: string } }) {
-  const archetype = ARCHETYPES[params.code?.toUpperCase()];
+// Prerender one OG image per archetype at build time
+export function generateStaticParams() {
+  return ARCHETYPE_CODES.map((code) => ({ code }));
+}
+
+export default async function OgImage({ params }: { params: Promise<{ code: string }> }) {
+  const { code: rawCode } = await params;
+  const archetype = ARCHETYPES[rawCode?.toUpperCase()];
 
   // Fallback for invalid codes
   const color = archetype?.color ?? '#16140F';

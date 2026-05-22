@@ -1,10 +1,44 @@
 import { NextRequest, NextResponse } from 'next/server';
+import crypto from 'node:crypto';
 import { MercadoPagoConfig, Payment } from 'mercadopago';
 import { Resend } from 'resend';
 import { render } from '@react-email/render';
 import { getSupabaseAdmin } from '@/lib/supabaseAdmin';
 import { ARCHETYPES } from '@/data/archetypes';
+import { SITE_URL } from '@/lib/config';
 import ReporteEmail from '@/emails/ReporteEmail';
+
+/**
+ * Verifies the webhook actually came from MercadoPago using the x-signature header.
+ * If MP_WEBHOOK_SECRET is not configured, verification is skipped (returns true)
+ * so the integration keeps working until the secret is added.
+ */
+function verifyMpSignature(req: NextRequest, dataId: string): boolean {
+  const secret = process.env.MP_WEBHOOK_SECRET;
+  if (!secret) return true; // not configured yet → don't block
+
+  const signature = req.headers.get('x-signature') ?? '';
+  const requestId = req.headers.get('x-request-id') ?? '';
+
+  // x-signature format: "ts=1700000000,v1=hash"
+  const parts: Record<string, string> = {};
+  for (const piece of signature.split(',')) {
+    const [k, v] = piece.split('=');
+    if (k && v) parts[k.trim()] = v.trim();
+  }
+  const ts = parts.ts;
+  const v1 = parts.v1;
+  if (!ts || !v1) return false;
+
+  const manifest = `id:${dataId.toLowerCase()};request-id:${requestId};ts:${ts};`;
+  const hmac = crypto.createHmac('sha256', secret).update(manifest).digest('hex');
+
+  try {
+    return crypto.timingSafeEqual(Buffer.from(hmac), Buffer.from(v1));
+  } catch {
+    return false;
+  }
+}
 
 export async function POST(req: NextRequest) {
   try {
@@ -17,6 +51,12 @@ export async function POST(req: NextRequest) {
 
     const paymentId = String(body.data?.id);
     if (!paymentId) return NextResponse.json({ error: 'No payment id' }, { status: 400 });
+
+    // Reject forged webhook calls
+    if (!verifyMpSignature(req, paymentId)) {
+      console.error('[webhook/mp] Invalid signature');
+      return NextResponse.json({ error: 'Invalid signature' }, { status: 401 });
+    }
 
     const accessToken = process.env.MP_ACCESS_TOKEN;
     if (!accessToken) return NextResponse.json({ error: 'MP not configured' }, { status: 500 });
@@ -87,12 +127,11 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: 'Email not configured' }, { status: 500 });
     }
 
-    const baseUrl = process.env.NEXT_PUBLIC_BASE_URL ?? 'https://prisma-v2-six.vercel.app';
-    const resend  = new Resend(resendKey);
+    const resend = new Resend(resendKey);
 
     const archetype = ARCHETYPES[archetypeCode];
     const html      = await render(
-      ReporteEmail({ code: archetypeCode, accessToken: accessTokenUUID, baseUrl }) as React.ReactElement
+      ReporteEmail({ code: archetypeCode, accessToken: accessTokenUUID, baseUrl: SITE_URL }) as React.ReactElement
     );
 
     const { error: emailError } = await resend.emails.send({

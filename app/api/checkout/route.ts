@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { MercadoPagoConfig, Preference } from 'mercadopago';
 import { ARCHETYPES } from '@/data/archetypes';
+import { SITE_URL, PRICE_AMOUNT, PRICE_CURRENCY } from '@/lib/config';
 
 export async function POST(req: NextRequest) {
   try {
@@ -20,8 +21,6 @@ export async function POST(req: NextRequest) {
     const client = new MercadoPagoConfig({ accessToken });
     const preference = new Preference(client);
 
-    const baseUrl = process.env.NEXT_PUBLIC_BASE_URL ?? 'https://prisma-v2-six.vercel.app';
-
     const result = await preference.create({
       body: {
         items: [
@@ -30,14 +29,14 @@ export async function POST(req: NextRequest) {
             title: `Reporte Completo PRISMA · ${archetype.name}`,
             description: `Análisis profundo, lectura de sombra, guía de carrera y plan de acción — arquetipo ${upper}`,
             quantity: 1,
-            unit_price: Number(process.env.MP_PRICE ?? 9990),
-            currency_id: process.env.MP_CURRENCY ?? 'ARS',
+            unit_price: Number(process.env.MP_PRICE ?? PRICE_AMOUNT),
+            currency_id: process.env.MP_CURRENCY ?? PRICE_CURRENCY,
           },
         ],
         back_urls: {
-          success: `${baseUrl}/reporte/${upper}/exito`,
-          failure: `${baseUrl}/reporte/${upper}?error=pago`,
-          pending: `${baseUrl}/reporte/${upper}/pendiente`,
+          success: `${SITE_URL}/reporte/${upper}/exito`,
+          failure: `${SITE_URL}/reporte/${upper}?error=pago`,
+          pending: `${SITE_URL}/reporte/${upper}/pendiente`,
         },
         auto_return: 'approved',
         external_reference: upper,

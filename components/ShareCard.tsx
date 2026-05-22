@@ -1,7 +1,6 @@
 'use client';
 
 import { useRef, useState } from 'react';
-import { toPng } from 'html-to-image';
 import { motion } from 'framer-motion';
 import type { Archetype } from '@/data/archetypes';
 
@@ -17,6 +16,7 @@ export default function ShareCard({ archetype }: ShareCardProps) {
     if (!cardRef.current || downloading) return;
     setDownloading(true);
     try {
+      const { toPng } = await import('html-to-image');
       const dataUrl = await toPng(cardRef.current, { pixelRatio: 2 });
       const link = document.createElement('a');
       link.download = `prisma-${archetype.code.toLowerCase()}.png`;
@@ -32,6 +32,7 @@ export default function ShareCard({ archetype }: ShareCardProps) {
   const handleShare = async () => {
     if (!cardRef.current) return;
     try {
+      const { toPng } = await import('html-to-image');
       const dataUrl = await toPng(cardRef.current, { pixelRatio: 2 });
       const res = await fetch(dataUrl);
       const blob = await res.blob();
