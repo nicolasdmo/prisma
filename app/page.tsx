@@ -22,18 +22,21 @@ export default function LandingPage() {
         </h1>
 
         <p className="text-ink-soft text-lg sm:text-xl max-w-md mb-10 leading-relaxed">
-          16 preguntas. Sin etiquetas. Tu mapa interior — con el arquetipo exacto que te define.
+          10 preguntas. Sin etiquetas. Tu mapa interior — con el arquetipo exacto que te define.
         </p>
 
         <Link
           href="/test"
-          className="inline-flex items-center gap-2 bg-ink text-bg-card px-8 py-4 rounded-pill text-sm font-mono tracking-widest uppercase hover:opacity-80 transition-opacity"
+          className="btn-cta inline-flex items-center gap-3 bg-ink text-bg-card px-9 py-4 rounded-pill text-sm font-mono tracking-widest uppercase hover:scale-[1.03] active:scale-95 transition-transform"
         >
           Empezar el test
+          <svg width="14" height="14" viewBox="0 0 14 14" fill="none" className="opacity-70">
+            <path d="M1 7h12M8 2l5 5-5 5" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+          </svg>
         </Link>
 
         <p className="mt-5 text-ink-faint font-mono text-xs tracking-wider">
-          ~3 min · 16 preguntas · 16 arquetipos
+          ~2 min · 10 preguntas · 16 arquetipos
         </p>
       </section>
 
@@ -45,7 +48,7 @@ export default function LandingPage() {
         <p className="eyebrow text-center mb-12">Cómo funciona</p>
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-8">
           {[
-            { n: '01', title: 'Respondé', text: 'Dieciséis dilemas concretos. Nada de "depende". Elegís el que más te representa.' },
+            { n: '01', title: 'Respondé', text: 'Diez preguntas concretas. Nada de "depende". Elegís la que más te representa.' },
             { n: '02', title: 'Procesamos', text: 'Tu patrón de respuestas activa uno de los 16 arquetipos posibles.' },
             { n: '03', title: 'Descubrís', text: 'Tu perfil completo: descripción, fortalezas, zona de crecimiento y referentes.' },
           ].map(({ n, title, text }) => (
@@ -86,9 +89,12 @@ export default function LandingPage() {
         </h2>
         <Link
           href="/test"
-          className="inline-flex items-center gap-2 bg-ink text-bg-card px-8 py-4 rounded-pill text-sm font-mono tracking-widest uppercase hover:opacity-80 transition-opacity"
+          className="btn-cta inline-flex items-center gap-3 bg-ink text-bg-card px-9 py-4 rounded-pill text-sm font-mono tracking-widest uppercase hover:scale-[1.03] active:scale-95 transition-transform"
         >
           Empezar ahora
+          <svg width="14" height="14" viewBox="0 0 14 14" fill="none" className="opacity-70">
+            <path d="M1 7h12M8 2l5 5-5 5" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+          </svg>
         </Link>
       </section>
 

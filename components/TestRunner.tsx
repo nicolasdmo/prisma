@@ -4,7 +4,7 @@ import { useState, useCallback } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useRouter } from 'next/navigation';
 import { QUESTIONS } from '@/data/questions';
-import { computeCode, type Answers, type AnswerLetter } from '@/lib/scoring';
+import { computeCode, computeScores, type Answers, type AnswerLetter } from '@/lib/scoring';
 
 const AXIS_LABELS: Record<string, string> = {
   E1: 'Energía',
@@ -13,24 +13,17 @@ const AXIS_LABELS: Record<string, string> = {
   E4: 'Estilo',
 };
 
-// Each axis gets a subtle tint on the question background
-const AXIS_TINT: Record<string, string> = {
-  E1: 'rgba(139,132,120,0.04)',
-  E2: 'rgba(100,120,139,0.04)',
-  E3: 'rgba(139,100,120,0.04)',
-  E4: 'rgba(120,139,100,0.04)',
-};
-
 export default function TestRunner() {
-  const router  = useRouter();
-  const [current,  setCurrent]  = useState(0);
-  const [answers,  setAnswers]  = useState<Answers>({});
-  const [selected, setSelected] = useState<AnswerLetter | null>(null);
+  const router   = useRouter();
+  const [current,   setCurrent]   = useState(0);
+  const [answers,   setAnswers]   = useState<Answers>({});
+  const [selected,  setSelected]  = useState<AnswerLetter | null>(null);
   const [direction, setDirection] = useState(1);
 
   const question = QUESTIONS[current];
-  const progress  = current / QUESTIONS.length;
-  const isLast    = current === QUESTIONS.length - 1;
+  const total    = QUESTIONS.length;
+  const progress = current / total;
+  const isLast   = current === total - 1;
 
   const handleSelect = useCallback(
     (letter: AnswerLetter) => {
@@ -42,14 +35,16 @@ export default function TestRunner() {
 
       setTimeout(() => {
         if (isLast) {
-          const code = computeCode(newAnswers);
+          const code   = computeCode(newAnswers);
+          const scores = computeScores(newAnswers);
+          try { localStorage.setItem('prisma_scores', JSON.stringify(scores)); } catch {}
           router.push(`/r/${code}`);
         } else {
           setDirection(1);
           setCurrent((c) => c + 1);
           setSelected(null);
         }
-      }, 420);
+      }, 380);
     },
     [selected, answers, question.id, isLast, router]
   );
@@ -62,20 +57,18 @@ export default function TestRunner() {
   };
 
   return (
-    <div
-      className="min-h-screen flex flex-col bg-bg transition-colors duration-700"
-      style={{ background: AXIS_TINT[question.axis] ? `linear-gradient(180deg, ${AXIS_TINT[question.axis]} 0%, var(--bg) 40%)` : undefined }}
-    >
-      {/* ── Progress bar ─────────────────────────────────────── */}
-      <div className="flex items-center gap-4 px-6 sm:px-10 py-5 border-b border-line-soft">
-        <span className="font-mono text-[11px] text-ink-faint tracking-widest shrink-0 w-12">
-          {String(current + 1).padStart(2, '0')}&thinsp;/&thinsp;{QUESTIONS.length}
+    <div className="min-h-screen flex flex-col bg-bg">
+
+      {/* ── Progress bar ──────────────────────────────────────── */}
+      <div className="flex items-center gap-4 px-5 sm:px-10 py-4 border-b border-line-soft">
+        <span className="font-mono text-[11px] text-ink-mute tracking-widest shrink-0">
+          {current + 1}&thinsp;/&thinsp;{total}
         </span>
-        <div className="progress-track">
+        <div className="progress-track flex-1">
           <motion.div
             className="progress-fill"
             animate={{ width: `${progress * 100}%` }}
-            transition={{ duration: 0.55, ease: [0.65, 0, 0.35, 1] }}
+            transition={{ duration: 0.5, ease: [0.65, 0, 0.35, 1] }}
           />
         </div>
         <motion.span
@@ -88,36 +81,33 @@ export default function TestRunner() {
         </motion.span>
       </div>
 
-      {/* ── Question card ─────────────────────────────────────── */}
-      <div className="flex-1 flex flex-col items-center justify-center px-6 sm:px-10 py-10">
-        <div className="w-full max-w-2xl">
+      {/* ── Question + options ────────────────────────────────── */}
+      <div className="flex-1 flex flex-col items-center justify-center px-5 sm:px-10 py-8">
+        <div className="w-full max-w-lg">
           <AnimatePresence mode="wait" custom={direction}>
             <motion.div
               key={question.id}
               custom={direction}
               variants={{
-                enter:  (d: number) => ({ x: d > 0 ? 52 : -52, opacity: 0 }),
+                enter:  (d: number) => ({ x: d > 0 ? 48 : -48, opacity: 0 }),
                 center: { x: 0, opacity: 1 },
-                exit:   (d: number) => ({ x: d > 0 ? -52 : 52, opacity: 0 }),
+                exit:   (d: number) => ({ x: d > 0 ? -48 : 48, opacity: 0 }),
               }}
               initial="enter"
               animate="center"
               exit="exit"
-              transition={{ duration: 0.26, ease: [0.4, 0, 0.2, 1] }}
+              transition={{ duration: 0.24, ease: [0.4, 0, 0.2, 1] }}
             >
-              {/* Intro */}
-              <p className="eyebrow mb-3">{question.intro}</p>
-
-              {/* Question text */}
+              {/* Question — single unified text */}
               <h2
-                className="font-serif text-3xl sm:text-4xl text-ink leading-snug mb-8"
+                className="font-serif text-2xl sm:text-3xl text-ink leading-snug mb-7"
                 style={{ fontFamily: 'var(--font-serif)' }}
               >
                 {question.text}
               </h2>
 
-              {/* 4 options — 2×2 on md+, stack on mobile */}
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+              {/* Options — single column always, compact */}
+              <div className="flex flex-col gap-2.5">
                 {question.options.map((opt) => {
                   const isChosen = selected === opt.letter;
                   const isDimmed = selected !== null && !isChosen;
@@ -126,46 +116,23 @@ export default function TestRunner() {
                     <motion.button
                       key={opt.letter}
                       onClick={() => handleSelect(opt.letter)}
-                      animate={{
-                        opacity: isDimmed ? 0.28 : 1,
-                        scale:   isChosen ? 0.97 : 1,
-                      }}
-                      transition={{ duration: 0.18 }}
-                      whileHover={!selected ? { scale: 1.01 } : {}}
+                      animate={{ opacity: isDimmed ? 0.22 : 1, scale: isChosen ? 0.98 : 1 }}
+                      transition={{ duration: 0.16 }}
+                      whileHover={!selected ? { scale: 1.005 } : {}}
+                      disabled={selected !== null}
                       className={`
-                        w-full text-left flex items-start gap-3 p-4 rounded-md border
-                        transition-colors duration-150 cursor-pointer
+                        w-full text-left flex items-center gap-3 px-4 py-3.5 rounded-xl border-2
+                        transition-all duration-150 cursor-pointer
                         ${isChosen
                           ? 'bg-ink border-ink text-bg-card shadow-sm'
-                          : 'bg-bg-elev border-line hover:border-ink-soft hover:bg-bg-card'
+                          : 'bg-bg-card border-line hover:border-ink-soft hover:shadow-sm'
                         }
                       `}
-                      disabled={selected !== null}
                     >
-                      {/* Letter badge */}
-                      <span
-                        className={`font-mono text-[10px] tracking-widest mt-0.5 shrink-0 w-5 h-5 flex items-center justify-center rounded-full border ${
-                          isChosen
-                            ? 'border-bg-card/40 text-bg-card/60'
-                            : 'border-line text-ink-faint'
-                        }`}
-                      >
-                        {opt.letter}
+                      <span className="text-xl shrink-0">{opt.emoji}</span>
+                      <span className={`text-sm leading-snug ${isChosen ? 'text-bg-card' : 'text-ink'}`}>
+                        {opt.text}
                       </span>
-
-                      <div className="flex flex-col gap-0.5 flex-1">
-                        {/* Emoji + label row */}
-                        <div className="flex items-center gap-1.5">
-                          <span className="text-base leading-none">{opt.emoji}</span>
-                          <span className={`font-mono text-[10px] tracking-wider uppercase ${isChosen ? 'text-bg-card/70' : 'text-ink-mute'}`}>
-                            {opt.label}
-                          </span>
-                        </div>
-                        {/* Option text */}
-                        <p className={`text-sm leading-snug ${isChosen ? 'text-bg-card' : 'text-ink-soft'}`}>
-                          {opt.text}
-                        </p>
-                      </div>
                     </motion.button>
                   );
                 })}
@@ -175,8 +142,8 @@ export default function TestRunner() {
         </div>
       </div>
 
-      {/* ── Back & skip row ──────────────────────────────────── */}
-      <div className="px-6 sm:px-10 pb-8 flex justify-between items-center max-w-2xl mx-auto w-full">
+      {/* ── Back / counter ────────────────────────────────────── */}
+      <div className="px-5 sm:px-10 pb-6 flex justify-between items-center max-w-lg mx-auto w-full">
         <button
           onClick={handleBack}
           disabled={current === 0}
@@ -185,7 +152,7 @@ export default function TestRunner() {
           ← Anterior
         </button>
         <span className="font-mono text-[10px] text-ink-faint tracking-wider">
-          {QUESTIONS.length - current - 1} restantes
+          {total - current - 1} restantes
         </span>
       </div>
     </div>

@@ -6,16 +6,17 @@ export interface Archetype {
   strengths: string[];
   growthZone: string;
   famousExamples: string[];
-  color: string;       // accent hex — shown only on result page
-  colorName: string;   // human label for the color
+  color: string;
+  colorName: string;
   emoji: string;
+  // Extended profile — shown after email gate
+  rarity: number;                // estimated % of population
+  workStyle: string;             // how they work best
+  teamRole: string;              // role in team settings
+  underPressure: string;         // behavior under stress
+  inRelationships: string;       // in personal relationships
+  complementaryCodes: [string, string]; // 2 complementary archetype codes
 }
-
-// Code structure: E1(I/E) + E2(S/N) + E3(L/V) + E4(P/F)
-// E1 — Energía:     I = Introspectivo   | E = Expresivo
-// E2 — Percepción:  S = Sensitivo        | N = iNtuitivo
-// E3 — Decisión:    L = Lógico           | V = Valores
-// E4 — Estilo:      P = Planificador     | F = Flexible
 
 export const ARCHETYPES: Record<string, Archetype> = {
   ISLP: {
@@ -27,9 +28,13 @@ export const ARCHETYPES: Record<string, Archetype> = {
     strengths: ['Pensamiento sistemático', 'Confiabilidad total', 'Precisión en la ejecución', 'Planificación de largo plazo'],
     growthZone: 'Aprender a soltar el control cuando el plan cambia y confiar en la intuición de las personas que te rodean.',
     famousExamples: ['Angela Merkel', 'Aristóteles', 'Warren Buffett'],
-    color: '#2E4A6E',
-    colorName: 'Azul Noche',
-    emoji: '🏛️',
+    color: '#2E4A6E', colorName: 'Azul Noche', emoji: '🏛️',
+    rarity: 11,
+    workStyle: 'Rendís mejor con tareas claras, tiempo sin interrupciones y autonomía para ejecutar. La calidad no es negociable para vos.',
+    teamRole: 'Sos el que cumple lo que promete. Tu consistencia y precisión dan confianza y previsibilidad al grupo.',
+    underPressure: 'Te volvés más metódico y concreto. Cuando el entorno se vuelve caótico, buscás orden inmediatamente.',
+    inRelationships: 'Sos leal de manera profunda pero discreta. Los actos importan más que las palabras para vos.',
+    complementaryCodes: ['ENVF', 'ESLF'],
   },
 
   ISLF: {
@@ -41,9 +46,13 @@ export const ARCHETYPES: Record<string, Archetype> = {
     strengths: ['Habilidad práctica', 'Adaptabilidad rápida', 'Resolución concreta de problemas', 'Observación aguda'],
     growthZone: 'Proyectarte al futuro y comunicar tu visión más allá del momento presente para que otros puedan acompañarte.',
     famousExamples: ['Bruce Lee', 'Steve Irwin', 'Michael Jordan'],
-    color: '#3D6B3A',
-    colorName: 'Verde Bosque',
-    emoji: '⚒️',
+    color: '#3D6B3A', colorName: 'Verde Bosque', emoji: '⚒️',
+    rarity: 5,
+    workStyle: 'Rendís mejor cuando podés tocar, hacer y ajustar en tiempo real. Los procesos rígidos y las reuniones largas te frenan.',
+    teamRole: 'Sos la persona que resuelve lo que nadie más puede en el momento. Tu agilidad práctica salva situaciones críticas.',
+    underPressure: 'Te activás. El problema urgente y concreto es donde más brillás — el caos no te paraliza.',
+    inRelationships: 'Sos de actos, no de palabras. Mostrás que te importa alguien estando presente y resolviendo.',
+    complementaryCodes: ['INVP', 'ENVP'],
   },
 
   ISVP: {
@@ -55,9 +64,13 @@ export const ARCHETYPES: Record<string, Archetype> = {
     strengths: ['Lealtad inquebrantable', 'Atención al detalle humano', 'Organización empática', 'Memoria emocional'],
     growthZone: 'Poner tus propias necesidades en la misma lista de prioridades que las de los demás — cuidarte a vos también es cuidar al grupo.',
     famousExamples: ['Madre Teresa', 'Nelson Mandela', 'Fred Rogers'],
-    color: '#7A5C3A',
-    colorName: 'Ámbar Tierra',
-    emoji: '🛡️',
+    color: '#7A5C3A', colorName: 'Ámbar Tierra', emoji: '🛡️',
+    rarity: 14,
+    workStyle: 'Sos más productivo en ambientes estables con roles claros. Tu atención al detalle y tu confiabilidad son tu mayor activo.',
+    teamRole: 'Sos el pegamento del equipo. Recordás lo que cada uno necesita y te asegurás de que nadie quede afuera.',
+    underPressure: 'Tendés a absorber el estrés del entorno y priorizás a los demás antes que a vos. Ese es tu límite a trabajar.',
+    inRelationships: 'Te entregás profundamente. Recordás los detalles, los aniversarios, lo que la otra persona necesita antes de que lo pida.',
+    complementaryCodes: ['ENLF', 'ESLF'],
   },
 
   ISVF: {
@@ -69,9 +82,13 @@ export const ARCHETYPES: Record<string, Archetype> = {
     strengths: ['Empatía profunda', 'Presencia genuina', 'Adaptabilidad emocional', 'Observación sensible'],
     growthZone: 'Aprender a expresar tus propias necesidades sin sentir que eso es una carga para los demás.',
     famousExamples: ['Lady Di', 'Bob Ross', 'Frida Kahlo'],
-    color: '#7B5E8C',
-    colorName: 'Violeta Suave',
-    emoji: '🌿',
+    color: '#7B5E8C', colorName: 'Violeta Suave', emoji: '🌿',
+    rarity: 9,
+    workStyle: 'Necesitás libertad y autenticidad para rendir bien. Lo que hacés tiene que tener sentido personal — el trabajo vacío te drena.',
+    teamRole: 'Sos el termómetro emocional del grupo. Detectás tensiones antes que nadie y creás espacios donde todos se sienten seguros.',
+    underPressure: 'Podés cerrarte hacia adentro. Necesitás procesar emocionalmente antes de poder actuar con claridad.',
+    inRelationships: 'Amás con mucha intensidad pero de manera selectiva. Los vínculos que formás son auténticos y duraderos.',
+    complementaryCodes: ['ENLP', 'ESLP'],
   },
 
   INLP: {
@@ -83,9 +100,13 @@ export const ARCHETYPES: Record<string, Archetype> = {
     strengths: ['Pensamiento estratégico', 'Independencia intelectual', 'Visión de largo plazo', 'Determinación enfocada'],
     growthZone: 'Conectar tu visión con las emociones de las personas que necesitás sumar — el liderazgo real necesita ambas dimensiones.',
     famousExamples: ['Nikola Tesla', 'Elon Musk', 'Alan Turing'],
-    color: '#1A3A5C',
-    colorName: 'Azul Profundo',
-    emoji: '♟️',
+    color: '#1A3A5C', colorName: 'Azul Profundo', emoji: '♟️',
+    rarity: 2,
+    workStyle: 'Rendís mejor con autonomía total y problemas complejos sin solución evidente. Los entornos burocráticos te agotan profundamente.',
+    teamRole: 'Aportás la visión que nadie más tiene. Sos el que ve adónde va el barco cuando todos están mirando las olas.',
+    underPressure: 'Te volvés más frío y analítico. Cortás el ruido emocional y te enfocás exclusivamente en la solución.',
+    inRelationships: 'Sos selectivo y profundo. No cualquiera entra a tu círculo — pero los que entran reciben lealtad total e incondicional.',
+    complementaryCodes: ['ESVF', 'ESLF'],
   },
 
   INLF: {
@@ -97,9 +118,13 @@ export const ARCHETYPES: Record<string, Archetype> = {
     strengths: ['Pensamiento original', 'Análisis profundo', 'Objetividad real', 'Apertura intelectual'],
     growthZone: 'Traducir tus ideas abstractas en acciones concretas que otros puedan seguir — el impacto necesita ejecución.',
     famousExamples: ['Albert Einstein', 'Charles Darwin', 'Bill Gates'],
-    color: '#3D4A6E',
-    colorName: 'Azul Pizarra',
-    emoji: '🔭',
+    color: '#3D4A6E', colorName: 'Azul Pizarra', emoji: '🔭',
+    rarity: 3,
+    workStyle: 'Necesitás tiempo para pensar sin interrupciones. Tus mejores ideas aparecen cuando tenés espacio mental real, no en reuniones.',
+    teamRole: 'Sos el que hace las preguntas que nadie quería hacer. Tu análisis previo previene errores que cuestan muy caro después.',
+    underPressure: 'Podés paralizarte si el problema no tiene suficiente información. Necesitás datos para poder moverte con confianza.',
+    inRelationships: 'Valorás profundamente la conexión intelectual. Una conversación estimulante vale más que mil gestos vacíos.',
+    complementaryCodes: ['ESVP', 'ENVF'],
   },
 
   INVP: {
@@ -111,9 +136,13 @@ export const ARCHETYPES: Record<string, Archetype> = {
     strengths: ['Intuición social aguda', 'Profundidad empática', 'Visión sistémica', 'Capacidad de inspirar genuinamente'],
     growthZone: 'Evitar cargarte con los problemas de todos — tu bienestar es la condición para que puedas ayudar.',
     famousExamples: ['Martin Luther King Jr.', 'Oprah Winfrey', 'Carl Jung'],
-    color: '#5C3A6E',
-    colorName: 'Violeta Oscuro',
-    emoji: '🔮',
+    color: '#5C3A6E', colorName: 'Violeta Oscuro', emoji: '🔮',
+    rarity: 2,
+    workStyle: 'Rendís mejor con propósito claro y autonomía real. Necesitás que tu trabajo tenga impacto genuino, no solo output medible.',
+    teamRole: 'Sos el que conecta la visión con las personas. Inspirás sin necesitar el spotlight — tu influencia es profunda y silenciosa.',
+    underPressure: 'Podés absorber demasiado de los demás. Tu mayor desafío bajo presión es proteger tu propia energía.',
+    inRelationships: 'Amás profundamente y de manera muy selectiva. Tu presencia sostenida en un vínculo es transformadora.',
+    complementaryCodes: ['ISLF', 'ESLF'],
   },
 
   INVF: {
@@ -125,9 +154,13 @@ export const ARCHETYPES: Record<string, Archetype> = {
     strengths: ['Creatividad profunda', 'Integridad genuina', 'Empatía selectiva e intensa', 'Idealismo fértil'],
     growthZone: 'Bajar las ideas del mundo ideal para actuar en el mundo real — la perfección postergada es menos valiosa que lo imperfecto en movimiento.',
     famousExamples: ['J.R.R. Tolkien', 'Vincent van Gogh', 'Albert Camus'],
-    color: '#8C5E7B',
-    colorName: 'Rosa Antigua',
-    emoji: '🌙',
+    color: '#8C5E7B', colorName: 'Rosa Antigua', emoji: '🌙',
+    rarity: 4,
+    workStyle: 'Necesitás trabajar en algo con significado real. La rutina sin propósito te agota emocionalmente en poco tiempo.',
+    teamRole: 'Sos la conciencia del equipo. Recordás los valores cuando el grupo se desvía y lo hacés con tacto y profundidad.',
+    underPressure: 'Tendés a idealizar cómo deberían ir las cosas. Aceptar la imperfección del proceso es tu trabajo constante.',
+    inRelationships: 'Buscás conexión auténtica y muy profunda. No tolerás la superficialidad — preferís estar solo que mal acompañado.',
+    complementaryCodes: ['ESLP', 'ENLP'],
   },
 
   ESLP: {
@@ -139,9 +172,13 @@ export const ARCHETYPES: Record<string, Archetype> = {
     strengths: ['Liderazgo claro y directo', 'Toma de decisiones rápida', 'Organización de equipos', 'Orientación a resultados concretos'],
     growthZone: 'Escuchar el "cómo se siente" tanto como el "qué hay que hacer" — los equipos que se sienten vistos rinden mejor.',
     famousExamples: ['Gordon Ramsay', 'Indira Gandhi', 'Henry Ford'],
-    color: '#6E2D2D',
-    colorName: 'Rojo Oscuro',
-    emoji: '📌',
+    color: '#6E2D2D', colorName: 'Rojo Oscuro', emoji: '📌',
+    rarity: 9,
+    workStyle: 'Sos altamente productivo en entornos estructurados con objetivos claros y métricas reales. La ambigüedad te frustra.',
+    teamRole: 'Organizás, delegás y ejecutás. Sos el que convierte las ideas en planes concretos con deadlines y responsables.',
+    underPressure: 'Te volvés más directivo y enfocado. Podés ser percibido como rígido cuando el tiempo apremia — pero entregás.',
+    inRelationships: 'Sos confiable y leal. Mostrás amor siendo responsable y presente — no con grandes gestos, sino con hechos constantes.',
+    complementaryCodes: ['INVF', 'INLF'],
   },
 
   ESLF: {
@@ -153,9 +190,13 @@ export const ARCHETYPES: Record<string, Archetype> = {
     strengths: ['Energía y velocidad de acción', 'Agilidad mental', 'Pragmatismo efectivo', 'Liderazgo por el ejemplo'],
     growthZone: 'Terminar lo que empezás — el compromiso sostenido es donde tu impacto se multiplica.',
     famousExamples: ['Richard Branson', 'Amelia Earhart', 'Theodore Roosevelt'],
-    color: '#8C5A2D',
-    colorName: 'Naranja Quemado',
-    emoji: '⚡',
+    color: '#8C5A2D', colorName: 'Naranja Quemado', emoji: '⚡',
+    rarity: 4,
+    workStyle: 'Rendís mejor con acción, variedad y desafíos nuevos. Los procesos lentos y las reuniones largas te consumen energía.',
+    teamRole: 'Sos el que rompe el hielo, arranca los proyectos y contagia energía cuando el equipo pierde momentum.',
+    underPressure: 'Te activás. La adrenalina del problema urgente saca lo mejor de vos — el caos es tu elemento.',
+    inRelationships: 'Sos intenso y presente cuando estás comprometido, pero necesitás espacio y novedad para no sentirte limitado.',
+    complementaryCodes: ['INVP', 'INLP'],
   },
 
   ESVP: {
@@ -167,9 +208,13 @@ export const ARCHETYPES: Record<string, Archetype> = {
     strengths: ['Inteligencia social alta', 'Lealtad inquebrantable', 'Organización empática', 'Calidez auténtica'],
     growthZone: 'Reconocer que decir que no también es una forma de cuidar — tanto a los demás como a vos mismo.',
     famousExamples: ['Taylor Swift', 'Oprah Winfrey', 'Magic Johnson'],
-    color: '#4A6E2D',
-    colorName: 'Verde Oliva',
-    emoji: '🤝',
+    color: '#4A6E2D', colorName: 'Verde Oliva', emoji: '🤝',
+    rarity: 12,
+    workStyle: 'Rendís mejor en ambientes colaborativos y armoniosos. El conflicto sostenido sin resolución te drena profundamente.',
+    teamRole: 'Sos el hub social del equipo. Sabés quién necesita qué y creás el ambiente donde todos pueden dar lo mejor.',
+    underPressure: 'Tendés a priorizar la paz del grupo sobre decir lo que realmente pensás. Tu voz también importa.',
+    inRelationships: 'Sos de los vínculos más generosos que existen. Das mucho — asegurate de recibir también.',
+    complementaryCodes: ['INLF', 'INLP'],
   },
 
   ESVF: {
@@ -181,9 +226,13 @@ export const ARCHETYPES: Record<string, Archetype> = {
     strengths: ['Carisma espontáneo', 'Empatía cálida y directa', 'Presencia magnética', 'Capacidad de hacer sentir bien a otros'],
     growthZone: 'Construir estructura para sostener tus compromisos más allá del impulso del momento.',
     famousExamples: ['Jennifer Lawrence', 'Will Smith', 'Shakira'],
-    color: '#C4823D',
-    colorName: 'Ámbar Dorado',
-    emoji: '🎭',
+    color: '#C4823D', colorName: 'Ámbar Dorado', emoji: '🎭',
+    rarity: 7,
+    workStyle: 'Rendís mejor cuando el trabajo es dinámico, social y te da libertad de expresión. La monotonía te apaga lentamente.',
+    teamRole: 'Sos el que eleva el ánimo cuando las cosas se ponen pesadas. Tu energía es un activo colectivo real.',
+    underPressure: 'Podés buscar algo más entretenido en lugar de resolver el conflicto. La disciplina sostenida es tu work in progress.',
+    inRelationships: 'Sos cálido, espontáneo y generoso. Hacés que la gente se sienta especial con una naturalidad que no se puede imitar.',
+    complementaryCodes: ['INLP', 'ISLP'],
   },
 
   ENLP: {
@@ -195,9 +244,13 @@ export const ARCHETYPES: Record<string, Archetype> = {
     strengths: ['Liderazgo estratégico', 'Visión de largo plazo', 'Determinación inquebrantable', 'Capacidad de inspirar acción real'],
     growthZone: 'Incorporar la perspectiva emocional como dato estratégico, no como distracción — los equipos que se sienten comprendidos ejecutan mejor.',
     famousExamples: ['Steve Jobs', 'Margaret Thatcher', 'Simone Biles'],
-    color: '#2D2D6E',
-    colorName: 'Índigo',
-    emoji: '🎯',
+    color: '#2D2D6E', colorName: 'Índigo', emoji: '🎯',
+    rarity: 2,
+    workStyle: 'Rendís mejor con responsabilidad real y problemas de alto impacto. Los ambientes mediocres te frustran profundamente.',
+    teamRole: 'Sos el líder que marca el norte. Tu claridad y energía hacen que otros den más de lo que creían posible.',
+    underPressure: 'Te volvés más intenso y exigente. Tu mayor riesgo es olvidar que las personas no son máquinas.',
+    inRelationships: 'Sos leal y comprometido cuando elegís estarlo, pero necesitás que el otro pueda sostenerte — no todos pueden.',
+    complementaryCodes: ['ISVF', 'INVF'],
   },
 
   ENLF: {
@@ -209,9 +262,13 @@ export const ARCHETYPES: Record<string, Archetype> = {
     strengths: ['Pensamiento lateral', 'Capacidad de debate constructivo', 'Generación constante de ideas', 'Energía en contextos nuevos'],
     growthZone: 'Llevar las ideas hasta el final — la ejecución es donde tu impacto se vuelve real y tangible.',
     famousExamples: ['Leonardo da Vinci', 'Mark Zuckerberg', 'Voltaire'],
-    color: '#2D6E6E',
-    colorName: 'Teal Oscuro',
-    emoji: '💡',
+    color: '#2D6E6E', colorName: 'Teal Oscuro', emoji: '💡',
+    rarity: 3,
+    workStyle: 'Rendís mejor en contextos de innovación con libertad para explorar sin burocracia que te frene a cada paso.',
+    teamRole: 'Sos el generador de ideas que expande los límites de lo posible. Necesitás a alguien que ejecute lo que imaginás.',
+    underPressure: 'Podés saltar de problema en problema sin resolver ninguno. Terminar lo empezado es tu desafío constante.',
+    inRelationships: 'Sos estimulante e intenso. Los vínculos profundos aparecen cuando te comprometés a estar presente de verdad.',
+    complementaryCodes: ['ISVP', 'ISLP'],
   },
 
   ENVP: {
@@ -223,9 +280,13 @@ export const ARCHETYPES: Record<string, Archetype> = {
     strengths: ['Empatía estratégica', 'Liderazgo inspirador', 'Comunicación que transforma', 'Visión clara del potencial humano'],
     growthZone: 'Darte permiso de tener tus propias necesidades sin que eso te haga sentir egoísta — los mejores mentores también se dejan acompañar.',
     famousExamples: ['Barack Obama', 'Malala Yousafzai', 'Brené Brown'],
-    color: '#6E2D5C',
-    colorName: 'Rosa Profundo',
-    emoji: '🌟',
+    color: '#6E2D5C', colorName: 'Rosa Profundo', emoji: '🌟',
+    rarity: 3,
+    workStyle: 'Rendís mejor cuando tu trabajo tiene impacto en personas reales. Necesitás ver el efecto concreto de lo que hacés.',
+    teamRole: 'Sos el que saca lo mejor de cada integrante individualmente. Tu capacidad de inspirar en uno a uno es extraordinaria.',
+    underPressure: 'Tendés a absorber el estrés del grupo. Tu bienestar afecta directamente el de todos los que te rodean.',
+    inRelationships: 'Das mucho en los vínculos — a veces más de lo que recibís. Aprender a recibir es tu tarea pendiente.',
+    complementaryCodes: ['ISLF', 'ISLP'],
   },
 
   ENVF: {
@@ -237,9 +298,13 @@ export const ARCHETYPES: Record<string, Archetype> = {
     strengths: ['Entusiasmo genuino y contagioso', 'Creatividad emocional', 'Conexión auténtica con las personas', 'Adaptabilidad natural'],
     growthZone: 'Profundizar en lo que ya tenés antes de saltar a lo siguiente — la raíz es lo que permite que el árbol crezca.',
     famousExamples: ['Robin Williams', 'Walt Disney', 'Isabel Allende'],
-    color: '#C43D6E',
-    colorName: 'Rosa Vibrante',
-    emoji: '🧭',
+    color: '#C43D6E', colorName: 'Rosa Vibrante', emoji: '🧭',
+    rarity: 8,
+    workStyle: 'Necesitás variedad, propósito y conexión con personas para rendir bien. La rutina sin sentido te apaga lentamente.',
+    teamRole: 'Sos el puente entre personas e ideas. Tu entusiasmo y tu capacidad de conectar son activos únicos e irremplazables.',
+    underPressure: 'Podés disiparte en muchas direcciones a la vez. El foco sostenido en una sola cosa es donde más necesitás trabajar.',
+    inRelationships: 'Sos intenso, cálido y genuinamente generoso. Cuando te comprometés de verdad, sos de los mejores compañeros posibles.',
+    complementaryCodes: ['ISLP', 'INLP'],
   },
 };
 

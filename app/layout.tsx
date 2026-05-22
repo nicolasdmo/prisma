@@ -1,5 +1,6 @@
 import type { Metadata } from 'next';
 import { Geist, Geist_Mono, Instrument_Serif } from 'next/font/google';
+import Providers from '@/components/Providers';
 import './globals.css';
 
 const geist = Geist({
@@ -21,10 +22,10 @@ const instrumentSerif = Instrument_Serif({
 export const metadata: Metadata = {
   title: 'PRISMA — Descubrí tu arquetipo',
   description:
-    '16 preguntas. Tu mapa interior. Descubrí cuál de los 16 arquetipos de personalidad sos.',
+    '10 preguntas. Tu mapa interior. Descubrí cuál de los 16 arquetipos de personalidad sos.',
   openGraph: {
     title: 'PRISMA — Descubrí tu arquetipo',
-    description: '16 preguntas. Tu mapa interior.',
+    description: '10 preguntas. Tu mapa interior.',
     type: 'website',
   },
 };
@@ -37,7 +38,9 @@ export default function RootLayout({
       lang="es"
       className={`${geist.variable} ${geistMono.variable} ${instrumentSerif.variable} h-full`}
     >
-      <body className="min-h-full flex flex-col antialiased">{children}</body>
+      <body className="min-h-full flex flex-col antialiased">
+        <Providers>{children}</Providers>
+      </body>
     </html>
   );
 }

@@ -35,7 +35,8 @@ export function computeCode(answers: Answers): string {
         const ans = answers[q.id];
         return ans !== undefined && isAPole(ans);
       }).length;
-      return aCount >= 3 ? poleA[i] : poleB[i];
+      // Strict majority → Pole A; ties go to Pole B (works for any axis length)
+      return aCount * 2 > axisQs.length ? poleA[i] : poleB[i];
     })
     .join('');
 }

@@ -36,6 +36,52 @@ body {
   color: var(--ink-mute);
 }
 
+/* ── Shimmer sweep for CTA buttons ─────────────────────────── */
+@keyframes shimmer-sweep {
+  0%   { transform: translateX(-100%) skewX(-15deg); }
+  100% { transform: translateX(220%)  skewX(-15deg); }
+}
+@keyframes btn-breathe {
+  0%, 100% { box-shadow: 0 0 0 0 rgba(22,20,15,0.18), 0 4px 14px rgba(22,20,15,0.22); }
+  50%       { box-shadow: 0 0 0 6px rgba(22,20,15,0.06), 0 6px 20px rgba(22,20,15,0.28); }
+}
+@keyframes premium-glow {
+  0%, 100% { opacity: 0.6; }
+  50%       { opacity: 1; }
+}
+@keyframes price-pop {
+  0%   { opacity: 0; transform: scale(0.92) translateY(6px); }
+  100% { opacity: 1; transform: scale(1)    translateY(0); }
+}
+
+.btn-cta {
+  position: relative;
+  overflow: hidden;
+  animation: btn-breathe 3.5s ease-in-out infinite;
+}
+.btn-cta::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(90deg, transparent 0%, rgba(255,255,255,0.18) 50%, transparent 100%);
+  transform: translateX(-100%) skewX(-15deg);
+  animation: shimmer-sweep 3.5s ease-in-out infinite;
+}
+
+.btn-cta-color {
+  position: relative;
+  overflow: hidden;
+}
+.btn-cta-color::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(90deg, transparent 0%, rgba(255,255,255,0.22) 50%, transparent 100%);
+  transform: translateX(-100%) skewX(-15deg);
+  animation: shimmer-sweep 2.8s ease-in-out infinite;
+  animation-delay: 0.8s;
+}
+
 .progress-track {
   height: 1px;
   background: var(--line);
