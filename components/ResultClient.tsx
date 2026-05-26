@@ -498,6 +498,7 @@ export default function ResultClient({ code }: { code: string }) {
   const archetype = ARCHETYPES[code.toUpperCase()];
   const [unlocked, setUnlocked] = useState(false);
   const [scores, setScores]     = useState<Record<string, number> | null>(null);
+  const [savedReportUrl, setSavedReportUrl] = useState<string | null>(null);
 
   useEffect(() => {
     try {
@@ -508,6 +509,11 @@ export default function ResultClient({ code }: { code: string }) {
     if (localStorage.getItem('prisma_unlocked') === code.toUpperCase()) {
       setUnlocked(true);
     }
+    // Surface saved premium-report link so the user can come back to it
+    try {
+      const saved = localStorage.getItem(`prisma_report_${code.toUpperCase()}`);
+      if (saved) setSavedReportUrl(saved);
+    } catch {}
   }, [code]);
 
   const handleUnlock = useCallback((_email: string, _name: string) => {
@@ -553,6 +559,27 @@ export default function ResultClient({ code }: { code: string }) {
           <Link href="/" className="eyebrow hover:text-ink transition-colors">← PRISMA</Link>
           <CodeReveal code={archetype.code} color={archetype.color} />
         </motion.div>
+
+        {/* Returning-buyer banner */}
+        {savedReportUrl && (
+          <motion.a
+            href={savedReportUrl}
+            initial={{ opacity: 0, y: -8 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 1.0, duration: 0.4 }}
+            className="flex flex-wrap items-center justify-center gap-2 sm:gap-3 px-6 py-3 border-b border-line hover:opacity-90 transition-opacity"
+            style={{ background: `${archetype.color}10` }}
+          >
+            <span className="text-sm">✨</span>
+            <p className="text-ink text-sm">Ya tenés tu reporte premium completo.</p>
+            <span
+              className="font-mono text-[10px] tracking-widest uppercase underline"
+              style={{ color: archetype.color }}
+            >
+              Abrirlo →
+            </span>
+          </motion.a>
+        )}
 
         {/* ── Hero ── */}
         <section className="px-6 sm:px-10 pt-14 sm:pt-20 pb-12 relative overflow-hidden">

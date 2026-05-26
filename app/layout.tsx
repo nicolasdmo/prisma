@@ -24,12 +24,12 @@ const instrumentSerif = Instrument_Serif({
 
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),
-  title: 'PRISMA — Descubrí tu arquetipo',
+  title: 'PRISMA — Hay 16 arquetipos. Solo uno sos vos.',
   description:
-    '12 preguntas. Tu mapa interior. Descubrí cuál de los 16 arquetipos de personalidad sos.',
+    '12 preguntas honestas. 3 minutos. El arquetipo que ya intuías que eras, descrito sin vueltas.',
   openGraph: {
-    title: 'PRISMA — Descubrí tu arquetipo',
-    description: '12 preguntas. Tu mapa interior.',
+    title: 'PRISMA — Hay 16 arquetipos. Solo uno sos vos.',
+    description: '12 preguntas. 3 minutos. El que sos.',
     type: 'website',
   },
 };

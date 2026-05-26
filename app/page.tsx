@@ -10,7 +10,7 @@ export default function LandingPage() {
       {/* ── Hero ─────────────────────────────────────────────── */}
       <section className="flex flex-col items-center justify-center flex-1 px-6 pt-20 pb-16 text-center">
 
-        <p className="eyebrow mb-8">Prisma · Test de personalidad</p>
+        <p className="eyebrow mb-8">Prisma · Test de arquetipos</p>
 
         <PrismIcon size={100} className="text-ink mb-8" />
 
@@ -18,11 +18,11 @@ export default function LandingPage() {
           className="font-serif text-5xl sm:text-6xl md:text-7xl text-ink leading-tight mb-6"
           style={{ fontFamily: 'var(--font-serif)' }}
         >
-          Descubrí quién<br />sos de verdad.
+          Hay 16.<br />Solo uno<br />es vos.
         </h1>
 
         <p className="text-ink-soft text-lg sm:text-xl max-w-md mb-10 leading-relaxed">
-          12 preguntas. Sin etiquetas. Tu mapa interior — con el arquetipo exacto que te define.
+          12 preguntas honestas. 3 minutos. El arquetipo que ya intuías que eras — descrito sin vueltas.
         </p>
 
         <Link
@@ -48,9 +48,9 @@ export default function LandingPage() {
         <p className="eyebrow text-center mb-12">Cómo funciona</p>
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-8">
           {[
-            { n: '01', title: 'Respondé', text: 'Doce preguntas concretas. Nada de "depende". Elegís la que más te representa.' },
-            { n: '02', title: 'Procesamos', text: 'Tu patrón de respuestas activa uno de los 16 arquetipos posibles.' },
-            { n: '03', title: 'Descubrís', text: 'Tu perfil completo: descripción, fortalezas, zona de crecimiento y referentes.' },
+            { n: '01', title: 'Respondé sin pensar', text: 'Doce preguntas que nadie te hace. La primera respuesta — la honesta — vale el doble.' },
+            { n: '02', title: 'Cruzamos tu patrón', text: 'Cuatro ejes. Dieciséis combinaciones posibles. Una sola se parece a vos.' },
+            { n: '03', title: 'Te ves desde afuera', text: 'Tu arquetipo, tus fortalezas, dónde te trabás. Vas a leerte y decir: "esto soy yo".' },
           ].map(({ n, title, text }) => (
             <div key={n} className="flex flex-col gap-3">
               <span className="font-mono text-xs text-ink-faint tracking-wider">{n}</span>
@@ -67,7 +67,7 @@ export default function LandingPage() {
       {/* ── Archetype grid ───────────────────────────────────── */}
       <section className="py-16 px-6 max-w-content mx-auto w-full">
         <p className="eyebrow text-center mb-3">Los 16 arquetipos</p>
-        <p className="text-center text-ink-mute text-sm mb-10">¿En cuál te reconocés?</p>
+        <p className="text-center text-ink-mute text-sm mb-10">Uno te va a doler. Otro te va a explicar todo.</p>
         <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
           {ARCHETYPE_LIST.map((a) => (
             <div
@@ -85,7 +85,7 @@ export default function LandingPage() {
       {/* ── Footer CTA ───────────────────────────────────────── */}
       <section className="py-16 px-6 text-center border-t border-line">
         <h2 className="font-serif text-3xl sm:text-4xl text-ink mb-6" style={{ fontFamily: 'var(--font-serif)' }}>
-          ¿Listo para descubrirlo?
+          ¿Te bancás saber?
         </h2>
         <Link
           href="/test"

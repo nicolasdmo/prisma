@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import Link from 'next/link';
 import { ARCHETYPES } from '@/data/archetypes';
@@ -121,12 +121,22 @@ function CareerBlock({ premium, color }: { premium: PremiumContent; color: strin
 export default function ExitoClient({ code, paymentId }: { code: string; paymentId: string }) {
   const archetype = ARCHETYPES[code];
   const premium   = PREMIUM[code];
-  const [copied, setCopied] = useState(false);
+  const [copied,    setCopied]    = useState(false);
+  const [reportUrl, setReportUrl] = useState('');
+
+  // Save the access link locally so the user can come back later from this device
+  useEffect(() => {
+    if (typeof window === 'undefined') return;
+    const url = window.location.href;
+    setReportUrl(url);
+    try { localStorage.setItem(`prisma_report_${code}`, url); } catch {}
+  }, [code]);
 
   if (!archetype || !premium) return null;
 
   const handleCopy = () => {
-    navigator.clipboard.writeText(`${window.location.origin}/reporte/${code}`).catch(() => {});
+    if (!reportUrl) return;
+    navigator.clipboard.writeText(reportUrl).catch(() => {});
     setCopied(true);
     setTimeout(() => setCopied(false), 2000);
   };
@@ -182,6 +192,42 @@ export default function ExitoClient({ code, paymentId }: { code: string; payment
           >
             Pago verificado · ID {paymentId.slice(0, 8)}…
           </motion.p>
+        </motion.div>
+
+        {/* Access link banner — save this! */}
+        <motion.div
+          initial={{ opacity: 0, y: 10 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.4 }}
+          className="rounded-lg p-5 mb-12 border"
+          style={{ borderColor: `${archetype.color}40`, background: `${archetype.color}06` }}
+        >
+          <div className="flex items-start gap-3 mb-4">
+            <span className="text-xl">🔖</span>
+            <div>
+              <p className="font-mono text-[10px] tracking-widest uppercase mb-1" style={{ color: archetype.color }}>
+                Tu link permanente
+              </p>
+              <p className="text-ink text-sm leading-relaxed">
+                Guardá este link en favoritos — es tu acceso al reporte para siempre.
+              </p>
+            </div>
+          </div>
+          <div className="flex gap-2">
+            <input
+              type="text"
+              readOnly
+              value={reportUrl}
+              onClick={(e) => (e.target as HTMLInputElement).select()}
+              className="flex-1 min-w-0 bg-bg-card border border-line rounded-md px-3 py-2 text-xs font-mono text-ink-soft truncate"
+            />
+            <button
+              onClick={handleCopy}
+              className="bg-ink text-bg-card px-4 py-2 rounded-md font-mono text-[10px] tracking-widest uppercase whitespace-nowrap hover:opacity-80 transition-opacity"
+            >
+              {copied ? '✓' : 'Copiar'}
+            </button>
+          </div>
         </motion.div>
 
         <div className="flex flex-col gap-14">
