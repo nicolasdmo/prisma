@@ -22,7 +22,7 @@ export default function LandingPage() {
         </h1>
 
         <p className="text-ink-soft text-lg sm:text-xl max-w-md mb-10 leading-relaxed">
-          10 preguntas. Sin etiquetas. Tu mapa interior — con el arquetipo exacto que te define.
+          12 preguntas. Sin etiquetas. Tu mapa interior — con el arquetipo exacto que te define.
         </p>
 
         <Link
@@ -36,7 +36,7 @@ export default function LandingPage() {
         </Link>
 
         <p className="mt-5 text-ink-faint font-mono text-xs tracking-wider">
-          ~2 min · 10 preguntas · 16 arquetipos
+          ~3 min · 12 preguntas · 16 arquetipos
         </p>
       </section>
 
@@ -48,7 +48,7 @@ export default function LandingPage() {
         <p className="eyebrow text-center mb-12">Cómo funciona</p>
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-8">
           {[
-            { n: '01', title: 'Respondé', text: 'Diez preguntas concretas. Nada de "depende". Elegís la que más te representa.' },
+            { n: '01', title: 'Respondé', text: 'Doce preguntas concretas. Nada de "depende". Elegís la que más te representa.' },
             { n: '02', title: 'Procesamos', text: 'Tu patrón de respuestas activa uno de los 16 arquetipos posibles.' },
             { n: '03', title: 'Descubrís', text: 'Tu perfil completo: descripción, fortalezas, zona de crecimiento y referentes.' },
           ].map(({ n, title, text }) => (

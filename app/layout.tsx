@@ -26,10 +26,10 @@ export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),
   title: 'PRISMA — Descubrí tu arquetipo',
   description:
-    '10 preguntas. Tu mapa interior. Descubrí cuál de los 16 arquetipos de personalidad sos.',
+    '12 preguntas. Tu mapa interior. Descubrí cuál de los 16 arquetipos de personalidad sos.',
   openGraph: {
     title: 'PRISMA — Descubrí tu arquetipo',
-    description: '10 preguntas. Tu mapa interior.',
+    description: '12 preguntas. Tu mapa interior.',
     type: 'website',
   },
 };

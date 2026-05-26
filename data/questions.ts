@@ -70,6 +70,16 @@ export const QUESTIONS: Question[] = [
       { emoji: '🚀', letter: 'd', text: 'De la nada. Me llegan sin buscarlas.' },
     ],
   },
+  {
+    id: 16, axis: 'E2',
+    text: '¿Qué te llama más la atención de una situación nueva?',
+    options: [
+      { emoji: '🔍', letter: 'a', text: 'Los detalles concretos: qué es, cómo funciona exactamente.' },
+      { emoji: '📊', letter: 'b', text: 'Los datos verificables — lo que se puede comprobar.' },
+      { emoji: '🌐', letter: 'c', text: 'Las conexiones con otras cosas que ya conozco.' },
+      { emoji: '💡', letter: 'd', text: 'El potencial — a dónde podría llegar.' },
+    ],
+  },
 
   // ─── E3 — Decisión ────────────────────────────────────────────
   {
@@ -122,6 +132,16 @@ export const QUESTIONS: Question[] = [
       { emoji: '😤', letter: 'b', text: 'No me gusta, pero lo manejo si es necesario.' },
       { emoji: '🌊', letter: 'c', text: 'Sin drama — me adapto fácilmente.' },
       { emoji: '⚡', letter: 'd', text: 'A veces los cambios inesperados sacan lo mejor de mí.' },
+    ],
+  },
+  {
+    id: 17, axis: 'E4',
+    text: '¿Cómo te sentís con una agenda vacía el fin de semana?',
+    options: [
+      { emoji: '📋', letter: 'a', text: 'Prefiero tener algo armado — la indefinición me incomoda.' },
+      { emoji: '🗓️', letter: 'b', text: 'Organizo algo — aprovechar bien el tiempo me importa.' },
+      { emoji: '😌', letter: 'c', text: 'Me relaja — puedo hacer lo que surja.' },
+      { emoji: '🎉', letter: 'd', text: 'La libertad total me activa. Lo espontáneo es lo mejor.' },
     ],
   },
 
