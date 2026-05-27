@@ -1,6 +1,7 @@
 'use client';
 
 import { MotionConfig } from 'framer-motion';
+import { SessionProvider } from 'next-auth/react';
 
 /**
  * App-wide providers.
@@ -8,5 +9,9 @@ import { MotionConfig } from 'framer-motion';
  * respect the OS-level "reduce motion" accessibility preference.
  */
 export default function Providers({ children }: { children: React.ReactNode }) {
-  return <MotionConfig reducedMotion="user">{children}</MotionConfig>;
+  return (
+    <SessionProvider>
+      <MotionConfig reducedMotion="user">{children}</MotionConfig>
+    </SessionProvider>
+  );
 }

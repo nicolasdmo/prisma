@@ -1,7 +1,7 @@
 'use client';
 
 import { useEffect, useRef, useState, useCallback } from 'react';
-import { getSupabaseBrowser } from '@/lib/supabaseBrowser';
+import { useSession, signIn } from 'next-auth/react';
 import { Analytics } from '@/lib/analytics';
 import { motion } from 'framer-motion';
 
@@ -12,7 +12,7 @@ interface Props {
 }
 
 export default function GoogleAuthGate({ archetypeCode, color: _color, onUnlock }: Props) {
-  const [loading,   setLoading]   = useState(true);
+  const { data: session, status } = useSession();
   const [signingIn, setSigningIn] = useState(false);
   const [error,     setError]     = useState('');
   const unlockedRef = useRef(false);
@@ -34,48 +34,23 @@ export default function GoogleAuthGate({ archetypeCode, color: _color, onUnlock 
     [archetypeCode, onUnlock],
   );
 
+  // Fire unlock as soon as we detect an authenticated session
   useEffect(() => {
-    const supabase = getSupabaseBrowser();
+    if (status === 'authenticated' && session?.user?.email) {
+      doUnlock(session.user.email, session.user.name ?? '');
+    }
+  }, [status, session, doUnlock]);
 
-    // Check for an existing session (e.g. returning from OAuth redirect)
-    supabase.auth.getSession().then(({ data: { session } }) => {
-      if (session?.user?.email) {
-        doUnlock(session.user.email, session.user.user_metadata?.full_name ?? '');
-      } else {
-        setLoading(false);
-      }
-    });
-
-    // Also listen for auth state changes (fallback / future re-logins)
-    const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
-      if (session?.user?.email) {
-        doUnlock(session.user.email, session.user.user_metadata?.full_name ?? '');
-      }
-    });
-
-    return () => subscription.unsubscribe();
-  }, [doUnlock]);
-
-  const handleSignIn = async () => {
+  const handleSignIn = () => {
     setSigningIn(true);
     setError('');
-
-    const { error: authError } = await getSupabaseBrowser().auth.signInWithOAuth({
-      provider: 'google',
-      options: {
-        redirectTo: `${window.location.origin}/auth/callback?next=${encodeURIComponent(window.location.pathname)}`,
-        scopes: 'email profile',
-      },
-    });
-
-    if (authError) {
-      setError('Hubo un error al conectar con Google. Intentá de nuevo.');
-      setSigningIn(false);
-    }
-    // On success the browser navigates away — no need to reset signingIn
+    // NextAuth redirects to Google and back to callbackUrl after login
+    signIn('google', { callbackUrl: window.location.pathname });
+    // Browser navigates away — no need to reset signingIn
   };
 
-  if (loading) {
+  // Show spinner while NextAuth checks the session
+  if (status === 'loading') {
     return (
       <div className="flex justify-center py-10">
         <span className="inline-block w-5 h-5 border-2 border-line border-t-ink rounded-full animate-spin" />
