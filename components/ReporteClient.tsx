@@ -8,6 +8,7 @@ import Link from 'next/link';
 import { ARCHETYPES } from '@/data/archetypes';
 import { PREMIUM } from '@/data/premiumContent';
 import { PRICE_DISPLAY } from '@/lib/config';
+import { getContrastText } from '@/lib/colorUtils';
 
 // ── Included item card ──────────────────────────────────────────
 
@@ -142,12 +143,12 @@ export default function ReporteClient({ code }: { code: string }) {
               <button
                 onClick={handlePurchase}
                 disabled={loading}
-                className="btn-cta-color flex items-center gap-3 px-8 py-4 rounded-pill text-bg-card font-mono text-sm tracking-widest uppercase transition-all hover:opacity-90 active:scale-95 disabled:opacity-60"
-                style={{ background: archetype.color }}
+                className="btn-cta-color flex items-center gap-3 px-8 py-4 rounded-pill font-mono text-sm tracking-widest uppercase transition-all hover:opacity-90 active:scale-95 disabled:opacity-60"
+                style={{ background: archetype.color, color: getContrastText(archetype.color) }}
               >
                 {loading ? (
                   <>
-                    <span className="inline-block w-4 h-4 border-2 border-bg-card/40 border-t-bg-card rounded-full animate-spin" />
+                    <span className="inline-block w-4 h-4 border-2 border-current/40 border-t-current rounded-full animate-spin" />
                     Procesando...
                   </>
                 ) : (
@@ -224,8 +225,8 @@ export default function ReporteClient({ code }: { code: string }) {
             <button
               onClick={handlePurchase}
               disabled={loading}
-              className="btn-cta-color px-8 py-4 rounded-pill text-bg-card font-mono text-sm tracking-widest uppercase transition-all hover:opacity-90 active:scale-95 disabled:opacity-60"
-              style={{ background: archetype.color }}
+              className="btn-cta-color px-8 py-4 rounded-pill font-mono text-sm tracking-widest uppercase transition-all hover:opacity-90 active:scale-95 disabled:opacity-60"
+              style={{ background: archetype.color, color: getContrastText(archetype.color) }}
             >
               {loading ? 'Procesando...' : `Obtener mi reporte — ${PRICE_DISPLAY}`}
             </button>

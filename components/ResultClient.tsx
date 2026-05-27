@@ -7,6 +7,7 @@ import Link from 'next/link';
 import { ARCHETYPES, type Archetype } from '@/data/archetypes';
 import { PRICE_DISPLAY } from '@/lib/config';
 import GoogleAuthGate from '@/components/GoogleAuthGate';
+import { getContrastText } from '@/lib/colorUtils';
 
 const POLE_LABELS = [
   { axis: 'E1', a: 'Introspectivo', b: 'Expresivo',   label: 'Energía' },
@@ -947,7 +948,7 @@ export default function ResultClient({ code }: { code: string }) {
                       className="btn-cta-color w-full flex items-center justify-center gap-3 px-8 py-4 rounded-pill font-mono text-sm tracking-widest uppercase hover:scale-[1.02] active:scale-95 transition-transform"
                       style={{
                         background: `linear-gradient(135deg, ${archetype.color}, ${archetype.color}cc)`,
-                        color: '#fff',
+                        color: getContrastText(archetype.color),
                         boxShadow: `0 0 0 1px ${archetype.color}60, 0 8px 32px ${archetype.color}50`,
                       }}
                     >
