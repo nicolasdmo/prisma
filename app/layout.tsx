@@ -33,11 +33,13 @@ export const metadata: Metadata = {
     title: 'PRISMA — Hay 16 arquetipos. Solo uno sos vos.',
     description: '12 preguntas. 3 minutos. El que sos.',
     type: 'website',
+    images: [{ url: '/og-image.jpg', width: 1080, height: 1080 }],
   },
   twitter: {
     card:        'summary_large_image',
     title:       'PRISMA — Hay 16 arquetipos. Solo uno sos vos.',
     description: '12 preguntas. 3 minutos. El que sos.',
+    images:      ['/og-image.jpg'],
   },
 };
 
