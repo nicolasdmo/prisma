@@ -7,7 +7,6 @@ import Link from 'next/link';
 import { ARCHETYPES, type Archetype } from '@/data/archetypes';
 import { PRICE_DISPLAY } from '@/lib/config';
 import GoogleAuthGate from '@/components/GoogleAuthGate';
-import ShareCard from '@/components/ShareCard';
 
 const POLE_LABELS = [
   { axis: 'E1', a: 'Introspectivo', b: 'Expresivo',   label: 'Energía' },
@@ -845,30 +844,6 @@ export default function ResultClient({ code }: { code: string }) {
                     ))}
                   </div>
                 </div>
-
-                <div className="h-px bg-line" />
-
-                {/* ── Share section ── */}
-                <motion.div
-                  initial={{ opacity: 0, y: 16 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ delay: 0.2, duration: 0.5 }}
-                  className="flex flex-col items-center gap-6"
-                >
-                  <div className="text-center">
-                    <p className="eyebrow mb-3">Tu tarjeta de arquetipo</p>
-                    <p
-                      className="font-serif text-2xl text-ink mb-1"
-                      style={{ fontFamily: 'var(--font-serif)' }}
-                    >
-                      Mostráselo al mundo.
-                    </p>
-                    <p className="text-ink-soft text-sm">
-                      Descargá la imagen y compartila donde quieras.
-                    </p>
-                  </div>
-                  <ShareCard archetype={archetype} />
-                </motion.div>
 
                 <div className="h-px bg-line" />
 
