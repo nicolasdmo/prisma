@@ -1,74 +1,76 @@
 'use client';
 
-import { useEffect, useState } from 'react';
-import {
-  signInWithPopup,
-  GoogleAuthProvider,
-  onAuthStateChanged,
-  type User,
-} from 'firebase/auth';
-import { auth } from '@/lib/firebase';
+import { useEffect, useRef, useState, useCallback } from 'react';
+import { getSupabaseBrowser } from '@/lib/supabaseBrowser';
 import { motion } from 'framer-motion';
 
 interface Props {
   archetypeCode: string;
-  color: string;
-  onUnlock: (email: string, name: string) => void;
+  color:         string;
+  onUnlock:      (email: string, name: string) => void;
 }
 
-export default function GoogleAuthGate({ archetypeCode, color, onUnlock }: Props) {
-  const [loading, setLoading]     = useState(true);
+export default function GoogleAuthGate({ archetypeCode, color: _color, onUnlock }: Props) {
+  const [loading,   setLoading]   = useState(true);
   const [signingIn, setSigningIn] = useState(false);
-  const [error, setError]         = useState('');
+  const [error,     setError]     = useState('');
+  const unlockedRef = useRef(false);
+
+  const doUnlock = useCallback(
+    (email: string, name: string) => {
+      if (unlockedRef.current) return; // prevent double-fire
+      unlockedRef.current = true;
+
+      fetch('/api/lead', {
+        method:  'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body:    JSON.stringify({ email, name, archetypeCode }),
+      }).catch(() => {});
+
+      onUnlock(email, name);
+    },
+    [archetypeCode, onUnlock],
+  );
 
   useEffect(() => {
-    let mounted = true;
+    const supabase = getSupabaseBrowser();
 
-    function doUnlock(user: User) {
-      if (!mounted || !user.email) return;
-      fetch('/api/lead', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          email: user.email,
-          name:  user.displayName ?? '',
-          archetypeCode,
-        }),
-      }).catch(() => {});
-      onUnlock(user.email, user.displayName ?? '');
-    }
-
-    const unsubscribe = onAuthStateChanged(auth, (user) => {
-      if (!mounted) return;
-      setLoading(false);
-      if (user) doUnlock(user);
+    // Check for an existing session (e.g. returning from OAuth redirect)
+    supabase.auth.getSession().then(({ data: { session } }) => {
+      if (session?.user?.email) {
+        doUnlock(session.user.email, session.user.user_metadata?.full_name ?? '');
+      } else {
+        setLoading(false);
+      }
     });
 
-    return () => {
-      mounted = false;
-      unsubscribe();
-    };
-  }, [archetypeCode, onUnlock]);
+    // Also listen for auth state changes (fallback / future re-logins)
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
+      if (session?.user?.email) {
+        doUnlock(session.user.email, session.user.user_metadata?.full_name ?? '');
+      }
+    });
+
+    return () => subscription.unsubscribe();
+  }, [doUnlock]);
 
   const handleSignIn = async () => {
     setSigningIn(true);
     setError('');
-    try {
-      const provider = new GoogleAuthProvider();
-      provider.addScope('email');
-      provider.addScope('profile');
-      await signInWithPopup(auth, provider);
-      // onAuthStateChanged fires → doUnlock → onUnlock → parent unlocks
-    } catch (e: unknown) {
-      const code = (e as { code?: string })?.code ?? '';
-      if (code === 'auth/popup-blocked') {
-        setError('Tu navegador bloqueó la ventana. Permitir popups para este sitio e intentar de nuevo.');
-      } else if (code !== 'auth/popup-closed-by-user') {
-        setError('Hubo un error al conectar con Google. Intentá de nuevo.');
-        console.warn('[PRISMA] sign-in error:', e);
-      }
+
+    const { error: authError } = await getSupabaseBrowser().auth.signInWithOAuth({
+      provider: 'google',
+      options: {
+        redirectTo: `${window.location.origin}/auth/callback?next=${encodeURIComponent(window.location.pathname)}`,
+        scopes: 'email profile',
+      },
+    });
+
+    if (authError) {
+      setError('Hubo un error al conectar con Google. Intentá de nuevo.');
       setSigningIn(false);
     }
+    // On success the browser navigates away — no need to reset signingIn
   };
 
   if (loading) {
@@ -110,7 +112,7 @@ export default function GoogleAuthGate({ archetypeCode, color, onUnlock }: Props
             <path d="M9 3.58c1.321 0 2.508.454 3.44 1.345l2.582-2.58C13.463.891 11.426 0 9 0A8.997 8.997 0 0 0 .957 4.958L3.964 7.29C4.672 5.163 6.656 3.58 9 3.58Z" fill="#EA4335"/>
           </svg>
         )}
-        {signingIn ? 'Abriendo Google...' : 'Continuar con Google'}
+        {signingIn ? 'Redirigiendo a Google...' : 'Continuar con Google'}
       </button>
 
       {error && (
