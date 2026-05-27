@@ -33,6 +33,11 @@ export const metadata: Metadata = {
     description: '12 preguntas. 3 minutos. El que sos.',
     type: 'website',
   },
+  twitter: {
+    card:        'summary_large_image',
+    title:       'PRISMA — Hay 16 arquetipos. Solo uno sos vos.',
+    description: '12 preguntas. 3 minutos. El que sos.',
+  },
 };
 
 export default function RootLayout({
