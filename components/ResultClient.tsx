@@ -733,30 +733,6 @@ export default function ResultClient({ code }: { code: string }) {
                   </div>
                 </div>
 
-                {/* Context cards */}
-                <div>
-                  <p className="eyebrow mb-2">Tu perfil en contexto</p>
-                  <p className="text-ink-soft text-sm mb-5">Cómo sos en distintas situaciones de la vida.</p>
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                    <ContextCard icon="💼" title="En el trabajo"  text={archetype.workStyle}      color={archetype.color} delay={0.0}  />
-                    <ContextCard icon="🤝" title="En equipo"      text={archetype.teamRole}        color={archetype.color} delay={0.07} />
-                    <ContextCard icon="🔥" title="Bajo presión"   text={archetype.underPressure}   color={archetype.color} delay={0.14} />
-                    <ContextCard icon="❤️" title="En vínculos"    text={archetype.inRelationships} color={archetype.color} delay={0.21} />
-                  </div>
-                </div>
-
-                {/* Growth zone */}
-                <motion.div
-                  initial={{ opacity: 0, y: 10 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ delay: 0.3 }}
-                  className="rounded-xl p-6 border"
-                  style={{ borderColor: `${archetype.color}35`, background: `${archetype.color}08` }}
-                >
-                  <p className="eyebrow mb-3">Tu zona de crecimiento</p>
-                  <p className="text-ink-soft leading-relaxed">{archetype.growthZone}</p>
-                </motion.div>
-
                 {/* Famous examples */}
                 <div>
                   <p className="eyebrow mb-2">Referentes de tu arquetipo</p>
@@ -773,15 +749,28 @@ export default function ResultClient({ code }: { code: string }) {
                   </div>
                 </div>
 
-                {/* Complementary archetypes */}
+                {/* Locked teaser — what's inside the premium */}
                 <div>
-                  <p className="eyebrow mb-2">Arquetipos que te complementan</p>
-                  <p className="text-ink-soft text-sm mb-5">
-                    Tienen exactamente lo que más te cuesta — juntos son imbatibles.
-                  </p>
-                  <div className="flex flex-col gap-3">
-                    {archetype.complementaryCodes.map((c) => (
-                      <ComplementaryCard key={c} code={c} myColor={archetype.color} />
+                  <p className="eyebrow mb-2">Esto te falta saber</p>
+                  <p className="text-ink-soft text-sm mb-5">Lo más jugoso de tu arquetipo está acá adentro.</p>
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                    {[
+                      { icon: '🌑', title: 'Tu lado oscuro',         text: 'Lo que sabotea sin que te des cuenta.' },
+                      { icon: '❤️', title: 'En vínculos',             text: 'Cómo amás, cómo te trabás, qué necesitás.' },
+                      { icon: '💼', title: 'En el trabajo',           text: 'Qué ambiente te potencia y cuál te apaga.' },
+                      { icon: '🤝', title: 'Con quién encajás',       text: 'Tus arquetipos complementarios.' },
+                    ].map(({ icon, title, text }) => (
+                      <div
+                        key={title}
+                        className="rounded-xl p-4 border border-line bg-bg-elev relative overflow-hidden"
+                      >
+                        <div className="flex items-center gap-2 mb-2">
+                          <span className="text-base opacity-60">{icon}</span>
+                          <span className="font-mono text-[10px] tracking-widest uppercase text-ink-faint">{title}</span>
+                          <span className="ml-auto text-xs text-ink-faint">🔒</span>
+                        </div>
+                        <p className="text-ink-mute text-sm leading-relaxed blur-[3px] select-none">{text}</p>
+                      </div>
                     ))}
                   </div>
                 </div>
@@ -862,7 +851,7 @@ export default function ResultClient({ code }: { code: string }) {
                         ['📋', 'Plan de 30 días'],
                         ['🧠', 'Análisis profundo'],
                         ['❤️', 'Perfil en vínculos'],
-                        ['✉️', 'Entregado por email'],
+                        ['⚡', 'Acceso web inmediato'],
                       ].map(([icon, label]) => (
                         <div key={label} className="flex items-center gap-2 text-sm" style={{ color: '#c2bdb1' }}>
                           <span className="text-base">{icon}</span>
