@@ -9,7 +9,8 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: 'Mensaje requerido.' }, { status: 400 });
     }
 
-    const { error } = await getSupabaseAdmin()
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const { error } = await (getSupabaseAdmin() as any)
       .from('contact_messages')
       .insert({
         name:    name?.trim()    || null,
