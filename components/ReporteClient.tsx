@@ -3,6 +3,7 @@
 import { useState } from 'react';
 import { motion } from 'framer-motion';
 import { track } from '@vercel/analytics';
+import { Analytics } from '@/lib/analytics';
 import Link from 'next/link';
 import { ARCHETYPES } from '@/data/archetypes';
 import { PREMIUM } from '@/data/premiumContent';
@@ -58,6 +59,7 @@ export default function ReporteClient({ code }: { code: string }) {
   const handlePurchase = async () => {
     setLoading(true);
     track('checkout_started', { code });
+    Analytics.checkoutStarted(code);
     try {
       const res  = await fetch('/api/checkout', {
         method: 'POST',

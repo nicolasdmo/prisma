@@ -5,6 +5,7 @@ import { motion } from 'framer-motion';
 import Link from 'next/link';
 import { ARCHETYPES } from '@/data/archetypes';
 import { PREMIUM, type PremiumContent } from '@/data/premiumContent';
+import { Analytics } from '@/lib/analytics';
 
 // ── Reused sub-components ────────────────────────────────────────
 
@@ -130,7 +131,10 @@ export default function ExitoClient({ code, paymentId }: { code: string; payment
     const url = window.location.href;
     setReportUrl(url);
     try { localStorage.setItem(`prisma_report_${code}`, url); } catch {}
-  }, [code]);
+    // Track purchase + report view
+    Analytics.purchase(code, paymentId);
+    Analytics.reportViewed(code);
+  }, [code, paymentId]);
 
   if (!archetype || !premium) return null;
 

@@ -2,6 +2,7 @@
 
 import { useEffect, useRef, useState, useCallback } from 'react';
 import { getSupabaseBrowser } from '@/lib/supabaseBrowser';
+import { Analytics } from '@/lib/analytics';
 import { motion } from 'framer-motion';
 
 interface Props {
@@ -27,6 +28,7 @@ export default function GoogleAuthGate({ archetypeCode, color: _color, onUnlock 
         body:    JSON.stringify({ email, name, archetypeCode }),
       }).catch(() => {});
 
+      Analytics.login(archetypeCode);
       onUnlock(email, name);
     },
     [archetypeCode, onUnlock],
