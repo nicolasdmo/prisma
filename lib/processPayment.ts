@@ -47,6 +47,7 @@ export async function processApprovedPayment(paymentId: string): Promise<Payment
     .from('purchases')
     .select('access_token')
     .eq('payment_id', paymentId)
+    .eq('product_type', 'prisma_report')
     .maybeSingle();
 
   if (existing) {
@@ -61,13 +62,14 @@ export async function processApprovedPayment(paymentId: string): Promise<Payment
   const { data: inserted, error } = await (supabase as any)
     .from('purchases')
     .insert({
-      email,
-      name,
-      archetype_code: archetypeCode,
+      buyer_email:    email,
+      buyer_name:     name,
+      archetype:      archetypeCode,
       payment_id:     paymentId,
       payment_status: 'approved',
       amount,
       currency,
+      product_type:   'prisma_report',
     })
     .select('access_token')
     .single();
