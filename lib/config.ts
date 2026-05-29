@@ -3,7 +3,7 @@
 
 /** Canonical public URL of the site (used for OG tags, sitemap, checkout). */
 export const SITE_URL =
-  process.env.NEXT_PUBLIC_BASE_URL ?? 'https://prisma-v2-six.vercel.app';
+  process.env.NEXT_PUBLIC_BASE_URL || 'https://prisma-v2-six.vercel.app';
 
 /** Premium report price — numeric amount charged through MercadoPago. */
 export const PRICE_AMOUNT = 5999;
