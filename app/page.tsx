@@ -22,7 +22,7 @@ export default function LandingPage() {
         </h1>
 
         <p className="text-ink-soft text-lg sm:text-xl max-w-md mb-10 leading-relaxed">
-          12 preguntas honestas. 3 minutos. El arquetipo que ya intuías que eras — descrito sin vueltas.
+          16 preguntas honestas. 2 minutos. El arquetipo que ya intuías que eras — descrito sin vueltas.
         </p>
 
         <Link
@@ -36,7 +36,7 @@ export default function LandingPage() {
         </Link>
 
         <p className="mt-5 text-ink-faint font-mono text-xs tracking-wider">
-          ~3 min · 12 preguntas · 16 arquetipos
+          ~2 min · 16 preguntas · 16 arquetipos
         </p>
       </section>
 
@@ -48,7 +48,7 @@ export default function LandingPage() {
         <p className="eyebrow text-center mb-12">Cómo funciona</p>
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-8">
           {[
-            { n: '01', title: 'Respondé sin pensar', text: 'Doce preguntas que nadie te hace. La primera respuesta — la honesta — vale el doble.' },
+            { n: '01', title: 'Respondé sin pensar', text: 'Dieciséis preguntas que nadie te hace. La primera respuesta — la honesta — vale el doble.' },
             { n: '02', title: 'Cruzamos tu patrón', text: 'Cuatro ejes. Dieciséis combinaciones posibles. Una sola se parece a vos.' },
             { n: '03', title: 'Te ves desde afuera', text: 'Tu arquetipo, tus fortalezas, dónde te trabás. Vas a leerte y decir: "esto soy yo".' },
           ].map(({ n, title, text }) => (
