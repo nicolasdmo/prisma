@@ -5,7 +5,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { track } from '@vercel/analytics';
 import Link from 'next/link';
 import { ARCHETYPES, type Archetype } from '@/data/archetypes';
-import { PRICE_DISPLAY } from '@/lib/config';
+import { PRICE_DISPLAY, PRICE_ANCHOR_DISPLAY } from '@/lib/config';
 import GoogleAuthGate from '@/components/GoogleAuthGate';
 import { getContrastText } from '@/lib/colorUtils';
 
@@ -936,8 +936,24 @@ export default function ResultClient({ code }: { code: string }) {
                     <div className="w-full h-px" style={{ background: 'rgba(255,255,255,0.07)' }} />
 
                     {/* Price */}
-                    <div className="flex flex-col items-center gap-1">
-                      <p className="font-mono text-[11px] tracking-widest uppercase" style={{ color: '#8a857b' }}>Precio único</p>
+                    <div className="flex flex-col items-center gap-1.5">
+                      {/* Anchor: what it "should" cost */}
+                      <div className="flex items-center gap-2">
+                        <span
+                          className="font-mono text-xs line-through"
+                          style={{ color: '#5a5650' }}
+                        >
+                          {PRICE_ANCHOR_DISPLAY}
+                        </span>
+                        <span
+                          className="font-mono text-[9px] tracking-widest uppercase px-2 py-0.5 rounded-full"
+                          style={{ background: `${archetype.color}22`, color: archetype.color }}
+                        >
+                          Precio de lanzamiento
+                        </span>
+                      </div>
+
+                      {/* Real price */}
                       <p
                         className="font-serif leading-none"
                         style={{
@@ -949,7 +965,14 @@ export default function ResultClient({ code }: { code: string }) {
                       >
                         {PRICE_DISPLAY}
                       </p>
-                      <p className="font-mono text-[10px]" style={{ color: '#8a857b' }}>ARS · pago único</p>
+
+                      <p className="font-mono text-[10px]" style={{ color: '#8a857b' }}>ARS · pago único · acceso permanente</p>
+
+                      {/* Anchor justification */}
+                      <p className="font-mono text-[9px] tracking-wide text-center max-w-[240px] leading-relaxed mt-0.5" style={{ color: '#5a5650' }}>
+                        Una sesión con psicólogo cuesta entre $15.000 y $25.000.<br />
+                        Tu informe cubre lo que una sesión no alcanza.
+                      </p>
                     </div>
 
                     {/* CTA Button */}
