@@ -52,12 +52,12 @@ export const QUESTIONS: Question[] = [
   // ─── E2 — Percepción ──────────────────────────────────────────
   {
     id: 6, axis: 'E2',
-    text: '¿Cómo encarás algo que nunca hiciste antes?',
+    text: 'Tenés un rato libre y la mente se te va sola. ¿Hacia dónde?',
     options: [
-      { emoji: '📖', letter: 'a', text: 'Leo todo lo que puedo antes de empezar.' },
-      { emoji: '📐', letter: 'b', text: 'Entiendo bien los pasos y después arranco.' },
-      { emoji: '🏃', letter: 'c', text: 'Arranco y busco respuestas cuando me trabo.' },
-      { emoji: '🏊', letter: 'd', text: 'Me tiro de cabeza — aprendo haciendo.' },
+      { emoji: '✅', letter: 'a', text: 'A lo concreto: pendientes y cosas que tengo que resolver.' },
+      { emoji: '🔁', letter: 'b', text: 'A repasar algo que ya pasó y darle vueltas.' },
+      { emoji: '🔗', letter: 'c', text: 'A conectar ideas sueltas: "esto se parece a aquello".' },
+      { emoji: '💭', letter: 'd', text: 'A imaginar escenarios: "¿y si...?".' },
     ],
   },
   {
@@ -104,12 +104,12 @@ export const QUESTIONS: Question[] = [
   },
   {
     id: 15, axis: 'E3',
-    text: '¿Con qué frase te identificás más?',
+    text: 'Tenés que dar una noticia difícil en el trabajo. ¿Qué te preocupa más?',
     options: [
-      { emoji: '🔬', letter: 'a', text: '"Los hechos no mienten. Las emociones, a veces sí."' },
-      { emoji: '📐', letter: 'b', text: '"Primero analizar bien, después decidir."' },
-      { emoji: '🌱', letter: 'c', text: '"Si no sirve a las personas, no importa cuánto sentido tenga."' },
-      { emoji: '💞', letter: 'd', text: '"Lo más valioso no se mide — se siente."' },
+      { emoji: '🎯', letter: 'a', text: 'Que el mensaje quede claro y no se preste a confusión.' },
+      { emoji: '📋', letter: 'b', text: 'Tener bien los argumentos por si me los discuten.' },
+      { emoji: '❤️', letter: 'c', text: 'Cómo se va a sentir la persona que la recibe.' },
+      { emoji: '🤝', letter: 'd', text: 'Decirlo de una forma que no lastime el vínculo.' },
     ],
   },
 

@@ -120,7 +120,7 @@ export const PREMIUM: Record<string, PremiumContent> = {
       'Enfermero/a o terapeuta ocupacional',
       'Coordinador de eventos o logística',
       'Maestro o educador primario',
-      'Administrador de comunidades o HOA',
+      'Administrador de consorcios o comunidades',
       'Asistente ejecutivo de alta confianza',
       'Gerente de recursos humanos',
     ],
@@ -252,7 +252,7 @@ export const PREMIUM: Record<string, PremiumContent> = {
       'Subestimar la importancia de la marca personal en entornos competitivos',
     ],
     shadowTitle: 'La Torre de Marfil',
-    shadowDescription: `Cuando el mundo exterior te decepciona — y lo hace con frecuencia — la respuesta es retirarte a tu cabeza, que es un lugar infinitamente más coherente y estimulante. Desde ahí, podés volerte crítico de casi todo sin contribuir con mucho. El análisis sin acción se vuelve una forma de no arriesgarte.\n\nHay también una tendencia a esperar que las ideas perfectas tengan un momento de presentación perfecto. Y ese momento nunca llega, entonces las mejores cosas que podrías contribuir se quedan dentro. El mundo no recibe lo que vos tenés para dar, y vos te resentís con un mundo que no reconoce algo que nunca vio.`,
+    shadowDescription: `Cuando el mundo exterior te decepciona — y lo hace con frecuencia — la respuesta es retirarte a tu cabeza, que es un lugar infinitamente más coherente y estimulante. Desde ahí, podés volverte crítico de casi todo sin contribuir con mucho. El análisis sin acción se vuelve una forma de no arriesgarte.\n\nHay también una tendencia a esperar que las ideas perfectas tengan un momento de presentación perfecto. Y ese momento nunca llega, entonces las mejores cosas que podrías contribuir se quedan dentro. El mundo no recibe lo que vos tenés para dar, y vos te resentís con un mundo que no reconoce algo que nunca vio.`,
     deepFear: `El miedo es que si te exponés — con una idea, un proyecto, una posición — y el mundo no lo valora, eso significa que tampoco te valoran a vos.`,
     healingPath: `Separar el valor de tus ideas de tu valor como persona. Y aprender que una idea imperfecta publicada genera más impacto que una perfecta que nadie leyó.`,
     shadowQuote: `"Todavía no está listo para mostrarlo."`,
@@ -289,7 +289,7 @@ export const PREMIUM: Record<string, PremiumContent> = {
     careerPitfalls: [
       'Absorber el dolor de las personas que acompañás sin procesar el tuyo propio',
       'Evitar roles de liderazgo formal porque no querés el conflicto que conlleva',
-      'Quedarte en proyectos que ya no alineán con tus valores por no querer decepcionar',
+      'Quedarte en proyectos que ya no se alinean con tus valores por no querer decepcionar',
     ],
     shadowTitle: 'La Carga del Mundo',
     shadowDescription: `Hay un límite entre sentir con los demás y cargar con lo que es de los demás. Cuando ese límite no está claro, empezás a acumular el peso de los problemas ajenos como si fueran tuyos para resolver. Y desde ese lugar de agotamiento, no podés ayudar a nadie — pero tampoco podés parar.\n\nAparece también un resentimiento silencioso cuando das tanto y recibís tan poco: cuando las personas que sostenés no te ven en tus propias dificultades. Ese resentimiento raramente se expresa directamente — se convierte en distancia, o en el agotamiento que finalmente te obliga a parar.`,
@@ -404,7 +404,7 @@ export const PREMIUM: Record<string, PremiumContent> = {
       'Cocinero o chef en cocina de alta presión',
       'Deportista profesional o entrenador',
     ],
-    workEnvironment: `Necesitás variedad, acción y resultados visibles. Los entornos lentos y burocráticos te consumen lentamente. Rendís mejor cuando tenés autonomía para adaptarte en tiempo real.`,
+    workEnvironment: `Necesitás variedad, acción y resultados visibles. Los entornos lentos y burocráticos te frustran enseguida. Rendís mejor cuando tenés autonomía para adaptarte en tiempo real.`,
     negotiationStyle: `Negociás con energía y adaptabilidad. Podés leer rápido qué necesita la otra parte y ajustarte. Tu riesgo es cerrar demasiado rápido un trato que merecía más tiempo — por el placer de cerrar.`,
     careerPitfalls: [
       'Saltar de oportunidad en oportunidad sin construir profundidad en ninguna',
@@ -417,7 +417,7 @@ export const PREMIUM: Record<string, PremiumContent> = {
     healingPath: `Aprender que la profundidad no es lo opuesto de la libertad. Que comprometerse de verdad con algo — y terminarlo — da un tipo de satisfacción que el siguiente comienzo no puede dar.`,
     shadowQuote: `"Me aburrí, necesito algo nuevo."`,
     loveStyle: `Amás con intensidad y presencia total — mientras estás presente. Necesitás un vínculo con espacio real para tu autonomía y novedad compartida. La rutina sin renovación te desconecta lentamente.`,
-    conflictPattern: `Preferís que los conflictos se resuelvan rápido y se sigan adelante. La resolución rápida a veces tape el problema sin resolverlo. Sentate con lo incómodo un poco más — vale la pena.`,
+    conflictPattern: `Preferís que los conflictos se resuelvan rápido y se sigan adelante. La resolución rápida a veces tapa el problema sin resolverlo. Sentate con lo incómodo un poco más — vale la pena.`,
   },
 
   ESVP: {
@@ -484,7 +484,7 @@ export const PREMIUM: Record<string, PremiumContent> = {
       'Guía turístico o de viajes de aventura',
       'Influencer o creador de contenido',
     ],
-    workEnvironment: `Necesitás dinamismo, contacto con personas y libertad de expresión. Los ambientes rígidos y monótonos te apagan lentamente. Tu mejor trabajo aparece cuando podés ser completamente vos mismo.`,
+    workEnvironment: `Necesitás dinamismo, contacto con personas y libertad de expresión. Los ambientes rígidos y monótonos te van apagando de a poco. Tu mejor trabajo aparece cuando podés ser completamente vos mismo.`,
     negotiationStyle: `Negociás con calidez y adaptabilidad — la otra persona generalmente quiere darte lo que pedís porque les gustó el intercambio. Tu riesgo es no prepararte suficiente y confiar demasiado en el encanto del momento.`,
     careerPitfalls: [
       'No construir disciplina y estructura propias porque siempre encontrás a alguien que te las da',
@@ -522,7 +522,7 @@ export const PREMIUM: Record<string, PremiumContent> = {
       'Político o figura pública con agenda propia',
       'General o líder militar de alto rango',
       'Abogado senior en litigios complejos',
-      'Director de reestructuraciones o turnarounds',
+      'Director de reestructuraciones de empresas',
     ],
     workEnvironment: `Necesitás responsabilidad real sobre resultados de alto impacto. Los ambientes mediocres te agotan más que los desafiantes. Rendís en contextos donde podés poner las reglas o al menos tener peso real en ellas.`,
     negotiationStyle: `Negociás con claridad sobre lo que querés y con la energía para conseguirlo. Sos difícil de mover de tus posiciones fundamentales. Tu fortaleza es la determinación — tu riesgo es no escuchar suficiente.`,
@@ -542,7 +542,7 @@ export const PREMIUM: Record<string, PremiumContent> = {
 
   ENLF: {
     code: 'ENLF',
-    deepDive: `Tu mente no funciona de manera lineal — funciona como una red donde todo está potencialmente conectado con todo. Eso es exactamente lo que te permite ver soluciones que no estaban en el mapa de nadie más. La síntesis creativa no es algo que hacés — es como pensás.\n\nLo que te distingue del pensador puro es que necesitás a las personas para que tus ideas tengan escala. No porque no puedas solos — sino porque el debate, la resistencia, el intercambio con otros, refinan y fortalecen lo que inicialmente es solo una chispa en tu cabeza. Sos mejor cuando tenés con quién pensar.`,
+    deepDive: `Tu mente no funciona de manera lineal — funciona como una red donde todo está potencialmente conectado con todo. Eso es exactamente lo que te permite ver soluciones que no estaban en el mapa de nadie más. La síntesis creativa no es algo que hacés — es como pensás.\n\nLo que te distingue del pensador puro es que necesitás a las personas para que tus ideas tengan escala. No porque no puedas solo — sino porque el debate, la resistencia, el intercambio con otros, refinan y fortalecen lo que inicialmente es solo una chispa en tu cabeza. Sos mejor cuando tenés con quién pensar.`,
     communicationStyle: `Comunicás con entusiasmo y velocidad. Podés hablar de cinco temas en una conversación y todos tienen algo que decirle al anterior. Lo que te cuesta es llegar al cierre — a veces la conversación termina sin que quede claro qué sigue.`,
     actionPlan: [
       'Elegí la idea más importante que tenés ahora y escribí el primer paso concreto para ejecutarla.',
@@ -615,7 +615,7 @@ export const PREMIUM: Record<string, PremiumContent> = {
     shadowDescription: `Das tanto a los demás que a veces no queda nada para vos. Y el problema no es solo el agotamiento — es que desde ese lugar vaciado, no podés dar lo que querés dar. El cuidado que viene del agotamiento ya no es cuidado genuino — es obligación disfrazada de vocación.\n\nHay también una tendencia a definirte por el impacto que tenés en los demás — y cuando ese impacto no es visible o reconocido, aparece una inseguridad profunda. Tu valor no depende de cuánto crecieron las personas a tu alrededor. Existe independientemente.`,
     deepFear: `El miedo es ser necesario para nadie — que si dejás de dar, de acompañar, de estar disponible, no haya razón para que las personas quieran estar cerca.`,
     healingPath: `Aprender que recibir también es un regalo que le hacés a la otra persona. Que permitir que te cuiden es una forma de profundizar el vínculo, no de debilitarte.`,
-    shadowQuote: `"¿Cómo estás?" (nunca en primera persona).`,
+    shadowQuote: `"Yo estoy bien, contame vos."`,
     loveStyle: `Amás viendo y nutriendo el potencial de la otra persona. Necesitás un vínculo donde esa profundidad sea recíproca — alguien que también te vea a vos.`,
     conflictPattern: `Manejás el conflicto con tacto y buscando preservar el vínculo. Podés rodear tanto la conversación difícil que la persona no entiende que había un problema. Más dirección, menos amortiguación.`,
   },
@@ -644,8 +644,8 @@ export const PREMIUM: Record<string, PremiumContent> = {
       'Director creativo o de marca',
       'Líder de comunidades o movimientos',
     ],
-    workEnvironment: `Necesitás variedad, propósito y contacto con personas que también crean. Los ambientes burocráticos y repetitivos te apagan lentamente. Tu mejor trabajo aparece cuando tenés libertad de conectar ideas y personas de maneras no obvias.`,
-    negotiationStyle: `Negociás con energía y genuinidad — la otra parte generalmente disfruta el intercambio. Tu riesgo es comprometerte a más de lo que podés cumplir en el entusiasmo del momento.`,
+    workEnvironment: `Necesitás variedad, propósito y contacto con personas que también crean. Los ambientes burocráticos y repetitivos te drenan la chispa. Tu mejor trabajo aparece cuando tenés libertad de conectar ideas y personas de maneras no obvias.`,
+    negotiationStyle: `Negociás con energía y honestidad — la otra parte generalmente disfruta el intercambio. Tu riesgo es comprometerte a más de lo que podés cumplir en el entusiasmo del momento.`,
     careerPitfalls: [
       'No profundizar en nada porque el siguiente entusiasmo siempre llama',
       'Comprometer más de lo que podés entregar en el momentum inicial',
