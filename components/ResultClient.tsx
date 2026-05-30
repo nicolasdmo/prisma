@@ -623,6 +623,16 @@ export default function ResultClient({ code }: { code: string }) {
 
   return (
     <>
+      {/* Entrance veil — dark → cream crossfade carried over from the test reveal */}
+      <motion.div
+        aria-hidden
+        className="fixed inset-0 pointer-events-none"
+        style={{ zIndex: 60, background: '#070611' }}
+        initial={{ opacity: 1 }}
+        animate={{ opacity: 0 }}
+        transition={{ duration: 0.7, ease: 'easeOut' }}
+      />
+
       {/* Color flash */}
       <motion.div
         className="fixed inset-0 z-50 pointer-events-none"

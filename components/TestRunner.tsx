@@ -6,6 +6,7 @@ import { track } from '@vercel/analytics';
 import { useRouter } from 'next/navigation';
 import { QUESTIONS } from '@/data/questions';
 import { computeCode, computeScores, type Answers, type AnswerLetter } from '@/lib/scoring';
+import { ARCHETYPES } from '@/data/archetypes';
 
 /* ── Per-axis vibrant palette ──────────────────────────────────── */
 type AxisStyle = { label: string; c1: string; c2: string };
@@ -18,7 +19,7 @@ const AXIS: Record<string, AxisStyle> = {
 const grad = (a: AxisStyle) => `linear-gradient(135deg, ${a.c1}, ${a.c2})`;
 const BG = '#070611';
 
-type Phase = 'intro' | 'quiz' | 'computing';
+type Phase = 'intro' | 'quiz' | 'computing' | 'reveal';
 
 export default function TestRunner() {
   const router = useRouter();
@@ -26,6 +27,7 @@ export default function TestRunner() {
   const [current,  setCurrent]  = useState(0);
   const [answers,  setAnswers]  = useState<Answers>({});
   const [selected, setSelected] = useState<AnswerLetter | null>(null);
+  const [resultCode, setResultCode] = useState<string | null>(null);
 
   const total    = QUESTIONS.length;
   const question = QUESTIONS[current];
@@ -52,8 +54,10 @@ export default function TestRunner() {
           const code = computeCode(next);
           try { localStorage.setItem('prisma_scores', JSON.stringify(computeScores(next))); } catch {}
           track('test_completed', { code });
+          setResultCode(code);
           setPhase('computing');
-          setTimeout(() => router.push(`/r/${code}`), 2400);
+          setTimeout(() => setPhase('reveal'), 1300);
+          setTimeout(() => router.push(`/r/${code}`), 3500);
         } else {
           setCurrent((c) => c + 1);
           setSelected(null);
@@ -218,6 +222,8 @@ export default function TestRunner() {
         )}
 
         {phase === 'computing' && <Computing key="computing" />}
+
+        {phase === 'reveal' && resultCode && <Reveal key="reveal" code={resultCode} />}
       </AnimatePresence>
     </div>
   );
@@ -396,6 +402,104 @@ function Computing() {
         transition={{ delay: 0.3 }}
       >
         Cruzando tus 4 ejes...
+      </motion.p>
+    </motion.section>
+  );
+}
+
+/* ── Reveal: dramatic archetype drop, bridges into the report ──── */
+function lighten(hex: string, amt: number): string {
+  const r = parseInt(hex.slice(1, 3), 16);
+  const g = parseInt(hex.slice(3, 5), 16);
+  const b = parseInt(hex.slice(5, 7), 16);
+  const up = (c: number) => Math.round(c + (255 - c) * amt).toString(16).padStart(2, '0');
+  return `#${up(r)}${up(g)}${up(b)}`;
+}
+
+function Reveal({ code }: { code: string }) {
+  const a = ARCHETYPES[code];
+  if (!a) return null;
+  const accent = lighten(a.color, 0.42); // archetype colours are tuned for cream — lift them for the dark reveal
+
+  return (
+    <motion.section
+      key="reveal"
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      exit={{ opacity: 0 }}
+      transition={{ duration: 0.4 }}
+      className="relative z-10 min-h-[100dvh] flex flex-col items-center justify-center px-6 text-center"
+    >
+      <div
+        className="pointer-events-none absolute inset-0"
+        style={{ background: `radial-gradient(60% 50% at 50% 44%, ${accent}33 0%, transparent 70%)` }}
+      />
+
+      <motion.span
+        initial={{ opacity: 0, y: 10 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ delay: 0.15 }}
+        className="relative font-mono text-xs uppercase tracking-[0.3em] text-white/55 mb-5"
+      >
+        Sos
+      </motion.span>
+
+      <motion.div
+        initial={{ scale: 0.4, opacity: 0, rotate: -12 }}
+        animate={{ scale: 1, opacity: 1, rotate: 0 }}
+        transition={{ type: 'spring', stiffness: 240, damping: 15, delay: 0.1 }}
+        className="relative mb-5 flex items-center justify-center rounded-[28px]"
+        style={{ width: 120, height: 120, background: 'rgba(255,255,255,0.06)', border: `1px solid ${accent}66`, boxShadow: `0 0 70px ${accent}55` }}
+      >
+        <span className="text-[64px] leading-none">{a.emoji}</span>
+      </motion.div>
+
+      <motion.h1
+        initial={{ opacity: 0, y: 14 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ delay: 0.28, duration: 0.5 }}
+        className="relative font-serif text-5xl sm:text-6xl mb-3"
+        style={{ fontFamily: 'var(--font-serif)', color: accent, textShadow: `0 0 40px ${accent}55` }}
+      >
+        {a.name}
+      </motion.h1>
+
+      <motion.p
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ delay: 0.45, duration: 0.5 }}
+        className="relative text-white/65 text-base max-w-sm mb-6"
+      >
+        {a.tagline}
+      </motion.p>
+
+      <motion.div
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ delay: 0.6 }}
+        className="relative flex gap-1.5"
+      >
+        {code.split('').map((l, i) => (
+          <motion.span
+            key={i}
+            initial={{ opacity: 0, y: 8 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.64 + i * 0.08 }}
+            className="font-mono text-xs tracking-widest px-2.5 py-1 rounded-md border"
+            style={{ borderColor: `${accent}55`, color: accent, background: `${accent}14` }}
+          >
+            {l}
+          </motion.span>
+        ))}
+      </motion.div>
+
+      <motion.p
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ delay: 1.2 }}
+        className="relative mt-8 font-mono text-[11px] tracking-wider text-white/35"
+      >
+        Preparando tu perfil…
       </motion.p>
     </motion.section>
   );
