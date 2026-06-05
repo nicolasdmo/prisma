@@ -129,6 +129,7 @@ export default function ExitoClient({ code, paymentId }: { code: string; payment
   useEffect(() => {
     if (typeof window === 'undefined') return;
     const url = window.location.href;
+    // eslint-disable-next-line react-hooks/set-state-in-effect -- sync URL from window on mount
     setReportUrl(url);
     try { localStorage.setItem(`prisma_report_${code}`, url); } catch {}
     // Track purchase + report view

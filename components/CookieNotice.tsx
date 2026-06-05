@@ -11,6 +11,7 @@ export default function CookieNotice() {
 
   useEffect(() => {
     try {
+      // eslint-disable-next-line react-hooks/set-state-in-effect -- read dismissal flag from localStorage on mount
       if (!localStorage.getItem(STORAGE_KEY)) setShow(true);
     } catch {
       /* storage blocked — just don't show */

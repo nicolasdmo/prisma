@@ -237,7 +237,7 @@ export default function ReporteEmail({ code, accessToken, baseUrl }: Props) {
                   {premium.shadowTitle}
                 </Text>
                 <Text style={{ fontFamily: font, fontSize: 16, color: '#8a8078', fontStyle: 'italic', borderLeft: `2px solid ${hex}`, paddingLeft: 16, margin: '0 0 20px', lineHeight: '1.6' }}>
-                  "{premium.shadowQuote}"
+                  “{premium.shadowQuote}”
                 </Text>
                 {premium.shadowDescription.split('\n\n').map((para, i) => (
                   <Text key={i} style={{ fontSize: 13, color: '#9a9088', lineHeight: '1.6', margin: '0 0 12px' }}>

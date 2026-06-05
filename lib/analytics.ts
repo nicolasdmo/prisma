@@ -43,4 +43,8 @@ export const Analytics = {
   /** User viewed their unlocked premium report */
   reportViewed: (archetypeCode: string) =>
     trackEvent('report_viewed', { archetype: archetypeCode }),
+
+  /** User unlocked the free detailed result after Google login */
+  resultUnlocked: (archetypeCode: string) =>
+    trackEvent('result_unlocked', { archetype: archetypeCode }),
 };

@@ -2,7 +2,7 @@
 
 import { useState, useCallback, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { track } from '@vercel/analytics';
+import { Analytics } from '@/lib/analytics';
 import { useRouter } from 'next/navigation';
 import { QUESTIONS } from '@/data/questions';
 import { computeCode, computeScores, type Answers, type AnswerLetter } from '@/lib/scoring';
@@ -26,13 +26,15 @@ export default function TestRunner() {
   const [phase,    setPhase]    = useState<Phase>('quiz');
   const [current,  setCurrent]  = useState(0);
   const [answers,  setAnswers]  = useState<Answers>({});
-  const [selected, setSelected] = useState<AnswerLetter | null>(null);
+  const [locked,   setLocked]   = useState(false);
   const [resultCode, setResultCode] = useState<string | null>(null);
 
   const total    = QUESTIONS.length;
   const question = QUESTIONS[current];
   const axis     = AXIS[question.axis] ?? AXIS.E1;
   const isLast   = current === total - 1;
+  // Derived from answers so going back shows (and lets you change) your pick.
+  const selected = answers[question.id] ?? null;
   const progress = (current + (selected ? 1 : 0)) / total;
 
   /* Paint the page background dark while the test is mounted. */
@@ -44,8 +46,8 @@ export default function TestRunner() {
 
   const handleSelect = useCallback(
     (letter: AnswerLetter) => {
-      if (selected) return;
-      setSelected(letter);
+      if (locked) return;
+      setLocked(true);
       const next = { ...answers, [question.id]: letter };
       setAnswers(next);
 
@@ -53,18 +55,18 @@ export default function TestRunner() {
         if (isLast) {
           const code = computeCode(next);
           try { localStorage.setItem('prisma_scores', JSON.stringify(computeScores(next))); } catch {}
-          track('test_completed', { code });
+          Analytics.testCompleted(code);
           setResultCode(code);
           setPhase('computing');
           setTimeout(() => setPhase('reveal'), 1300);
           setTimeout(() => router.push(`/r/${code}`), 3500);
         } else {
           setCurrent((c) => c + 1);
-          setSelected(null);
+          setLocked(false);
         }
       }, 460);
     },
-    [selected, answers, question, isLast, router],
+    [locked, answers, question, isLast, router],
   );
 
   /* Keyboard 1–4 for fast answering */
@@ -82,9 +84,8 @@ export default function TestRunner() {
   }, [phase, question, handleSelect]);
 
   const handleBack = () => {
-    if (current === 0) return;
+    if (current === 0 || locked) return;
     setCurrent((c) => c - 1);
-    setSelected(null);
   };
 
   return (
@@ -158,18 +159,18 @@ export default function TestRunner() {
                     <div className="flex flex-col gap-3">
                       {question.options.map((opt, i) => {
                         const chosen = selected === opt.letter;
-                        const dimmed = selected !== null && !chosen;
+                        const dimmed = locked && !chosen;
 
                         return (
                           <motion.button
                             key={opt.letter}
                             onClick={() => handleSelect(opt.letter)}
-                            disabled={selected !== null}
+                            disabled={locked}
                             initial={{ opacity: 0, y: 18 }}
                             animate={{ opacity: dimmed ? 0.25 : 1, y: 0, scale: chosen ? 1.02 : 1 }}
-                            transition={{ delay: selected ? 0 : 0.1 + i * 0.06, duration: 0.3, ease: [0.22, 1, 0.36, 1] }}
-                            whileHover={!selected ? { scale: 1.015, x: 2 } : {}}
-                            whileTap={!selected ? { scale: 0.975 } : {}}
+                            transition={{ delay: locked ? 0 : 0.1 + i * 0.06, duration: 0.3, ease: [0.22, 1, 0.36, 1] }}
+                            whileHover={!locked ? { scale: 1.015, x: 2 } : {}}
+                            whileTap={!locked ? { scale: 0.975 } : {}}
                             className={`group w-full text-left flex items-center gap-4 rounded-2xl px-4 py-4 border cursor-pointer
                               ${chosen ? 'border-transparent' : 'bg-white/[0.045] border-white/10 hover:border-white/30 hover:bg-white/[0.07]'}`}
                             style={chosen ? { background: grad(axis), boxShadow: `0 12px 34px ${axis.c1}40` } : undefined}

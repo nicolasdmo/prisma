@@ -1,7 +1,6 @@
 import type { Metadata } from 'next';
 import { Geist, Geist_Mono, Instrument_Serif } from 'next/font/google';
 import Script from 'next/script';
-import { Analytics } from '@vercel/analytics/next';
 import { SpeedInsights } from '@vercel/speed-insights/next';
 import Providers from '@/components/Providers';
 import ContactButton from '@/components/ContactButton';
@@ -56,7 +55,6 @@ export default function RootLayout({
         <Providers>{children}</Providers>
         <ContactButton />
         <CookieNotice />
-        <Analytics />
         <SpeedInsights />
         <Script
           src="https://www.googletagmanager.com/gtag/js?id=G-47KBVB1F4L"

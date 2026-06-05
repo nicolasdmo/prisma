@@ -2,7 +2,7 @@
 
 import { useState, useEffect, useCallback, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { track } from '@vercel/analytics';
+import { Analytics } from '@/lib/analytics';
 import Link from 'next/link';
 import { ARCHETYPES, type Archetype } from '@/data/archetypes';
 import { PRICE_DISPLAY, PRICE_ANCHOR_DISPLAY } from '@/lib/config';
@@ -277,6 +277,7 @@ function ViralShare({ archetype }: { archetype: Archetype }) {
     if (typeof navigator === 'undefined') return;
     if (typeof navigator.share !== 'function') return;
     const isTouch = 'ontouchstart' in window || (navigator.maxTouchPoints ?? 0) > 0;
+    // eslint-disable-next-line react-hooks/set-state-in-effect -- read touch capability from navigator on mount
     setCanShare(isTouch);
   }, []);
 
@@ -589,6 +590,7 @@ export default function ResultClient({ code }: { code: string }) {
   useEffect(() => {
     try {
       const raw = localStorage.getItem('prisma_scores');
+      // eslint-disable-next-line react-hooks/set-state-in-effect -- hydrate scores from localStorage on mount
       if (raw) setScores(JSON.parse(raw));
     } catch {}
     // Restore session if already unlocked
@@ -604,7 +606,7 @@ export default function ResultClient({ code }: { code: string }) {
 
   const handleUnlock = useCallback((_email: string, _name: string) => {
     localStorage.setItem('prisma_unlocked', code.toUpperCase());
-    track('result_unlocked', { code: code.toUpperCase() });
+    Analytics.resultUnlocked(code.toUpperCase());
     setUnlocked(true);
   }, [code]);
 
