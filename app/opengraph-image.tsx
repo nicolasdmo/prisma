@@ -139,7 +139,7 @@ export default function OgImage() {
                 color:         'rgba(255,255,255,0.32)',
               }}
             >
-              12 preguntas · 3 minutos
+              16 preguntas · 2 minutos
             </span>
           </div>
         </div>

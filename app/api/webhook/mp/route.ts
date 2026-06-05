@@ -14,7 +14,15 @@ import ReporteEmail from '@/emails/ReporteEmail';
  */
 function verifyMpSignature(req: NextRequest, dataId: string): boolean {
   const secret = process.env.MP_WEBHOOK_SECRET;
-  if (!secret) return true;
+  if (!secret) {
+    // Without a secret we can't verify authenticity. processApprovedPayment still
+    // re-checks the payment against MercadoPago (the real defence), so we don't
+    // hard-fail — but warn loudly in production so it gets configured.
+    if (process.env.NODE_ENV === 'production') {
+      console.error('[webhook/mp] MP_WEBHOOK_SECRET not set — webhook signature NOT verified. Set it in your environment to harden this endpoint.');
+    }
+    return true;
+  }
 
   const signature = req.headers.get('x-signature') ?? '';
   const requestId = req.headers.get('x-request-id') ?? '';

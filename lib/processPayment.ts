@@ -1,6 +1,7 @@
 import { MercadoPagoConfig, Payment } from 'mercadopago';
 import { getSupabaseAdmin } from '@/lib/supabaseAdmin';
 import { ARCHETYPES } from '@/data/archetypes';
+import { PRICE_AMOUNT } from '@/lib/config';
 
 export interface PaymentResult {
   email:           string;
@@ -38,6 +39,16 @@ export async function processApprovedPayment(paymentId: string): Promise<Payment
   const currency      = data.currency_id ?? 'ARS';
 
   if (!email || !archetypeCode || !ARCHETYPES[archetypeCode]) return null;
+
+  // ── Guard against under-payment / tampered amounts ────────────
+  // Legit payments always match: the preference is created server-side with a
+  // fixed price, so this only rejects manipulated or wrong-product payments.
+  // 5% tolerance absorbs rounding / minor promo differences.
+  const expected = Number(process.env.MP_PRICE ?? PRICE_AMOUNT);
+  if (expected > 0 && amount < expected * 0.95) {
+    console.error(`[processPayment] Amount ${amount} ${currency} below expected ${expected} for payment ${paymentId} — rejecting`);
+    return null;
+  }
 
   // ── Idempotent upsert into purchases ──────────────────────────
   const supabase = getSupabaseAdmin();

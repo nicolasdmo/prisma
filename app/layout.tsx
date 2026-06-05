@@ -5,6 +5,7 @@ import { Analytics } from '@vercel/analytics/next';
 import { SpeedInsights } from '@vercel/speed-insights/next';
 import Providers from '@/components/Providers';
 import ContactButton from '@/components/ContactButton';
+import CookieNotice from '@/components/CookieNotice';
 import { SITE_URL } from '@/lib/config';
 import './globals.css';
 
@@ -33,13 +34,13 @@ export const metadata: Metadata = {
     title: 'PRISMA — Hay 16 arquetipos. Solo uno sos vos.',
     description: '16 preguntas. 2 minutos. El que sos.',
     type: 'website',
-    images: [{ url: '/og-image.jpg', width: 1080, height: 1080 }],
+    // og:image lo provee app/opengraph-image.tsx (1200×630, dinámico).
   },
   twitter: {
     card:        'summary_large_image',
     title:       'PRISMA — Hay 16 arquetipos. Solo uno sos vos.',
     description: '16 preguntas. 2 minutos. El que sos.',
-    images:      ['/og-image.jpg'],
+    // twitter:image también usa app/opengraph-image.tsx como fallback (1200×630).
   },
 };
 
@@ -54,6 +55,7 @@ export default function RootLayout({
       <body className="min-h-full flex flex-col antialiased">
         <Providers>{children}</Providers>
         <ContactButton />
+        <CookieNotice />
         <Analytics />
         <SpeedInsights />
         <Script

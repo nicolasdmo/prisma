@@ -198,6 +198,11 @@ export default function LandingPage() {
         <p className="font-mono text-xs text-white/30 tracking-wider">
           PRISMA · {new Date().getFullYear()}
         </p>
+        <p className="mt-2 flex items-center justify-center gap-4 font-mono text-[11px] text-white/30">
+          <Link href="/privacidad" className="hover:text-white/60 transition-colors">Privacidad</Link>
+          <span className="text-white/15">·</span>
+          <Link href="/terminos" className="hover:text-white/60 transition-colors">Términos</Link>
+        </p>
       </footer>
     </main>
   );

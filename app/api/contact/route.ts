@@ -5,17 +5,29 @@ export async function POST(req: NextRequest) {
   try {
     const { name, email, message } = await req.json();
 
-    if (!message?.trim()) {
+    const cleanMessage = (message ?? '').toString().trim();
+    const cleanName    = (name ?? '').toString().trim();
+    const cleanEmail   = (email ?? '').toString().trim();
+
+    if (!cleanMessage) {
       return NextResponse.json({ error: 'Mensaje requerido.' }, { status: 400 });
+    }
+    // Anti-spam: reject oversized payloads.
+    if (cleanMessage.length > 2000 || cleanName.length > 120 || cleanEmail.length > 200) {
+      return NextResponse.json({ error: 'Datos demasiado largos.' }, { status: 400 });
+    }
+    // Validate email format when provided.
+    if (cleanEmail && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(cleanEmail)) {
+      return NextResponse.json({ error: 'Email inválido.' }, { status: 400 });
     }
 
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const { error } = await (getSupabaseAdmin() as any)
       .from('contact_messages')
       .insert({
-        name:    name?.trim()    || null,
-        email:   email?.trim()   || null,
-        message: message.trim(),
+        name:    cleanName  || null,
+        email:   cleanEmail || null,
+        message: cleanMessage,
         source:  'prisma',
       });
 
