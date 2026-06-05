@@ -295,11 +295,16 @@ document.addEventListener('DOMContentLoaded', async () => {
     const codigo = calcularArquetipo(state.respuestas);
     const scores = calcularScores(state.respuestas);
 
-    // Store in localStorage
-    localStorage.setItem('prisma_resultado', codigo);
-    localStorage.setItem('prisma_scores', JSON.stringify(scores));
-    localStorage.setItem('prisma_nombre', nombre);
-    localStorage.setItem('prisma_respuestas', JSON.stringify(state.respuestas));
+    // Store in localStorage (puede fallar en modo incógnito / storage bloqueado)
+    try {
+      localStorage.setItem('prisma_resultado', codigo);
+      localStorage.setItem('prisma_scores', JSON.stringify(scores));
+      localStorage.setItem('prisma_nombre', nombre);
+      localStorage.setItem('prisma_respuestas', JSON.stringify(state.respuestas));
+    } catch (err) {
+      // El resultado igual viaja por la URL (?tipo=...&nombre=...), así que no bloqueamos.
+      console.warn('No se pudo guardar en localStorage:', err);
+    }
 
     // Play success sound
     if (state.audioEnabled) {

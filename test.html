@@ -5,6 +5,10 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Tu test — PRISMA</title>
 
+  <!-- Favicon -->
+  <link rel="icon" type="image/png" href="assets/favicon.png">
+  <link rel="apple-touch-icon" href="assets/apple-touch-icon.png">
+
   <!-- Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -157,10 +161,12 @@
     const el = document.getElementById('nombre-intro');
     if (el && nombre) el.textContent = nombre;
 
-    // Mini particles for intro
+    // Mini particles for intro (respetando prefers-reduced-motion)
     const c = document.getElementById('particles-intro');
-    if (c) {
-      for (let i = 0; i < 30; i++) {
+    const reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    if (c && !reduce) {
+      const total = window.innerWidth < 768 ? 15 : 30;
+      for (let i = 0; i < total; i++) {
         const p = document.createElement('div');
         p.className = 'particle';
         p.style.cssText = `

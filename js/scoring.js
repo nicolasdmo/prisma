@@ -3,32 +3,51 @@
    ============================================================ */
 
 /**
+ * Configuración única de los 4 ejes (fuente de verdad para todo el scoring).
+ *  - indices: posiciones (0–15) de las 4 preguntas del eje.
+ *  - pesos:   peso de cada pregunta (misma posición que `indices`).
+ *
+ * Por qué pesos distintos: antes cada eje se decidía por mayoría simple, y
+ * todo empate 2–2 caía SIEMPRE del lado 'A' (Interior / Analítico / Racional /
+ * Planificador), sesgando los resultados hacia el arquetipo I-A-R-P.
+ * Los pesos suman 4.3 (en décimas: 43, impar), así que ningún subconjunto de
+ * respuestas puede sumar exactamente la mitad (2.15) → los empates exactos son
+ * imposibles y el desempate depende de QUÉ preguntas se respondieron a cada
+ * lado, no de un sesgo fijo. Son sutiles (0.9–1.3) y podés ajustarlos.
+ */
+const EJES = {
+  1: { indices: [0, 4, 8, 12],  pesos: [0.9, 1.0, 1.1, 1.3], letterA: 'I', letterB: 'E', labelA: 'Interior',     labelB: 'Exterior'  },
+  2: { indices: [1, 5, 9, 13],  pesos: [0.9, 1.0, 1.1, 1.3], letterA: 'A', letterB: 'N', labelA: 'Analítico',    labelB: 'Intuitivo' },
+  3: { indices: [2, 6, 10, 14], pesos: [0.9, 1.0, 1.1, 1.3], letterA: 'R', letterB: 'M', labelA: 'Racional',     labelB: 'Empático'  },
+  4: { indices: [3, 7, 11, 15], pesos: [0.9, 1.0, 1.1, 1.3], letterA: 'P', letterB: 'F', labelA: 'Planificador', labelB: 'Flexible'  }
+};
+
+/**
+ * Puntúa un eje sumando los pesos de cada polo.
+ * @returns {{scoreA:number, scoreB:number, total:number, countA:number, countB:number}}
+ */
+function puntuarEje(respuestas, config) {
+  let scoreA = 0, scoreB = 0, countA = 0, countB = 0;
+  config.indices.forEach((idx, k) => {
+    const peso = config.pesos[k];
+    if (respuestas[idx] === 'A') { scoreA += peso; countA++; }
+    else                         { scoreB += peso; countB++; }
+  });
+  return { scoreA, scoreB, total: scoreA + scoreB, countA, countB };
+}
+
+/**
  * Calcula el arquetipo a partir de un array de respuestas.
  * @param {Array<'A'|'B'>} respuestas - Array de 16 respuestas (índices 0–15)
  * @returns {string} Código del arquetipo, ej: 'I-A-R-P'
  */
 function calcularArquetipo(respuestas) {
-  // Eje 1 — Energía: preguntas 1,5,9,13 → índices 0,4,8,12
-  const eje1 = [0, 4, 8, 12].map(i => respuestas[i]);
-  const e1A = eje1.filter(r => r === 'A').length;
-  const E1 = e1A >= 2 ? 'I' : 'E'; // A=Interior, B=Exterior
-
-  // Eje 2 — Percepción: preguntas 2,6,10,14 → índices 1,5,9,13
-  const eje2 = [1, 5, 9, 13].map(i => respuestas[i]);
-  const e2A = eje2.filter(r => r === 'A').length;
-  const E2 = e2A >= 2 ? 'A' : 'N'; // A=Analítico, B=Intuitivo
-
-  // Eje 3 — Decisión: preguntas 3,7,11,15 → índices 2,6,10,14
-  const eje3 = [2, 6, 10, 14].map(i => respuestas[i]);
-  const e3A = eje3.filter(r => r === 'A').length;
-  const E3 = e3A >= 2 ? 'R' : 'M'; // A=Racional, B=Empático
-
-  // Eje 4 — Estilo: preguntas 4,8,12,16 → índices 3,7,11,15
-  const eje4 = [3, 7, 11, 15].map(i => respuestas[i]);
-  const e4A = eje4.filter(r => r === 'A').length;
-  const E4 = e4A >= 2 ? 'P' : 'F'; // A=Planificador, B=Flexible
-
-  return `${E1}-${E2}-${E3}-${E4}`;
+  return Object.values(EJES).map(config => {
+    const { scoreA, scoreB } = puntuarEje(respuestas, config);
+    // Con los pesos elegidos nunca hay empate exacto; el '>=' es sólo una red
+    // de seguridad por si alguien ajusta los pesos y crea uno.
+    return scoreA >= scoreB ? config.letterA : config.letterB;
+  }).join('-');
 }
 
 /**
@@ -37,26 +56,18 @@ function calcularArquetipo(respuestas) {
  * @returns {Object} scores por eje
  */
 function calcularScores(respuestas) {
-  const ejes = {
-    1: { indices: [0,4,8,12], labelA: 'Interior',    labelB: 'Exterior' },
-    2: { indices: [1,5,9,13], labelA: 'Analítico',   labelB: 'Intuitivo' },
-    3: { indices: [2,6,10,14],labelA: 'Racional',    labelB: 'Empático' },
-    4: { indices: [3,7,11,15],labelA: 'Planificador', labelB: 'Flexible' }
-  };
-
   const scores = {};
-  Object.entries(ejes).forEach(([eje, config]) => {
-    const answers = config.indices.map(i => respuestas[i]);
-    const countA = answers.filter(r => r === 'A').length;
-    const countB = 4 - countA;
+  Object.entries(EJES).forEach(([eje, config]) => {
+    const { scoreA, scoreB, total, countA, countB } = puntuarEje(respuestas, config);
+    const percentA = (scoreA / total) * 100;
     scores[eje] = {
       labelA: config.labelA,
       labelB: config.labelB,
       countA,
       countB,
-      percentA: (countA / 4) * 100,
-      percentB: (countB / 4) * 100,
-      dominant: countA >= countB ? 'A' : 'B'
+      percentA,
+      percentB: 100 - percentA, // garantiza que las barras sumen exactamente 100%
+      dominant: scoreA >= scoreB ? 'A' : 'B'
     };
   });
   return scores;

@@ -2,11 +2,19 @@
    PRISMA — Resultado Page JS
    ============================================================ */
 
+/* Dominio que aparece en la tarjeta para compartir. Por defecto toma el
+   dominio actual, así siempre coincide con el link que se comparte. Si algún
+   día usás un dominio propio fijo, reemplazá esta línea por:
+   const SITE_DOMAIN = 'tudominio.com'; */
+const SITE_DOMAIN = (window.location.hostname || '').replace(/^www\./, '') || 'prismatest.com';
+
 document.addEventListener('DOMContentLoaded', () => {
   const params  = new URLSearchParams(window.location.search);
-  const codigo  = params.get('tipo') || localStorage.getItem('prisma_resultado') || 'I-N-M-F';
-  const nombre  = params.get('nombre') || localStorage.getItem('prisma_nombre') || 'Viajero';
-  const scores  = JSON.parse(localStorage.getItem('prisma_scores') || '{}');
+  const safeLS  = (k) => { try { return localStorage.getItem(k); } catch { return null; } };
+  const codigo  = params.get('tipo') || safeLS('prisma_resultado') || 'I-N-M-F';
+  const nombre  = params.get('nombre') || safeLS('prisma_nombre') || 'Viajero';
+  let scores = {};
+  try { scores = JSON.parse(safeLS('prisma_scores') || '{}'); } catch { scores = {}; }
 
   const arq = ARQUETIPOS[codigo];
   if (!arq) {
@@ -94,8 +102,14 @@ document.addEventListener('DOMContentLoaded', () => {
   /* ---- Scores Radar (trait bars) ---- */
   renderScoreBars(scores, arq);
 
-  /* ---- Generate share card (Canvas) ---- */
-  generateShareCard(arq, nombre);
+  /* ---- Generate share card (Canvas) — diferido para no bloquear el primer
+         render con el dibujo de 1080×1080. requestIdleCallback con `timeout`
+         garantiza que la tarjeta se dibuje aunque la pestaña esté en segundo
+         plano (sin timeout, el navegador puede posponerlo indefinidamente).
+         Fallback a setTimeout donde no exista la API. ---- */
+  const dibujarTarjeta = () => generateShareCard(arq, nombre);
+  if (window.requestIdleCallback) requestIdleCallback(dibujarTarjeta, { timeout: 500 });
+  else setTimeout(dibujarTarjeta, 1);
 
   /* ---- Share buttons ---- */
   initShareButtons(arq, nombre, codigo);
@@ -231,7 +245,7 @@ function generateShareCard(arq, nombre) {
   // Bottom text
   ctx.font = '36px Arial';
   ctx.fillStyle = 'rgba(255,255,255,0.35)';
-  ctx.fillText('Descubrí tu arquetipo en prismatest.com', W/2, 890);
+  ctx.fillText('Descubrí tu arquetipo en ' + SITE_DOMAIN, W/2, 890);
 
   // Name
   if (nombre && nombre !== 'Viajero') {
@@ -298,9 +312,11 @@ function initShareButtons(arq, nombre, codigo) {
   const btnRetry = document.getElementById('btn-retry');
   if (btnRetry) {
     btnRetry.addEventListener('click', () => {
-      localStorage.removeItem('prisma_resultado');
-      localStorage.removeItem('prisma_scores');
-      localStorage.removeItem('prisma_respuestas');
+      try {
+        localStorage.removeItem('prisma_resultado');
+        localStorage.removeItem('prisma_scores');
+        localStorage.removeItem('prisma_respuestas');
+      } catch (e) { /* storage no disponible — no pasa nada */ }
       window.location.href = 'index.html';
     });
   }

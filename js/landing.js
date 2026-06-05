@@ -17,9 +17,13 @@ function createParticles() {
   const container = document.getElementById('particles');
   if (!container) return;
 
+  // Respetar a quien prefiere menos movimiento; aligerar la carga en móvil.
+  if (window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+  const count = window.innerWidth < 768 ? 25 : 60;
+
   const colors = ['#7c6aff', '#f64f59', '#fbb040', '#10b981', '#3b82f6', '#a855f7'];
 
-  for (let i = 0; i < 60; i++) {
+  for (let i = 0; i < count; i++) {
     const p = document.createElement('div');
     p.className = 'particle';
     const size = Math.random() * 4 + 1;
@@ -125,9 +129,13 @@ function initForm() {
       console.warn('Error guardando email:', err);
     }
 
-    // Store locally too
-    localStorage.setItem('prisma_nombre', nombre);
-    localStorage.setItem('prisma_email', email);
+    // Store locally too (puede fallar en modo incógnito / storage bloqueado)
+    try {
+      localStorage.setItem('prisma_nombre', nombre);
+      localStorage.setItem('prisma_email', email);
+    } catch (err) {
+      console.warn('No se pudo guardar en localStorage:', err);
+    }
 
     // Small delay for UX then redirect
     setTimeout(() => {
