@@ -23,7 +23,7 @@ type Phase = 'intro' | 'quiz' | 'computing' | 'reveal';
 
 export default function TestRunner() {
   const router = useRouter();
-  const [phase,    setPhase]    = useState<Phase>('intro');
+  const [phase,    setPhase]    = useState<Phase>('quiz');
   const [current,  setCurrent]  = useState(0);
   const [answers,  setAnswers]  = useState<Answers>({});
   const [selected, setSelected] = useState<AnswerLetter | null>(null);
@@ -92,10 +92,6 @@ export default function TestRunner() {
       <Orbs axis={axis} />
 
       <AnimatePresence mode="wait">
-        {phase === 'intro' && (
-          <Intro key="intro" total={total} onStart={() => setPhase('quiz')} />
-        )}
-
         {phase === 'quiz' && (
           <motion.section
             key="quiz"
@@ -258,101 +254,6 @@ function Orbs({ axis }: { axis: AxisStyle }) {
         style={{ background: 'radial-gradient(120% 80% at 50% -5%, transparent 45%, rgba(7,6,17,0.78) 100%)' }}
       />
     </div>
-  );
-}
-
-/* ── Intro: states the count once, sells precision ─────────────── */
-function Intro({ total, onStart }: { total: number; onStart: () => void }) {
-  const dims = [
-    { label: 'Energía',    c: '#FF9A3D' },
-    { label: 'Percepción', c: '#3BC9F0' },
-    { label: 'Decisión',   c: '#C46BFF' },
-    { label: 'Estilo',     c: '#5BE39A' },
-  ];
-
-  return (
-    <motion.section
-      key="intro"
-      initial={{ opacity: 0 }}
-      animate={{ opacity: 1 }}
-      exit={{ opacity: 0, scale: 0.98 }}
-      transition={{ duration: 0.5 }}
-      className="relative z-10 min-h-[100dvh] flex flex-col items-center justify-center px-6 py-16 text-center"
-    >
-      <motion.span
-        initial={{ opacity: 0, y: 10 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ delay: 0.05 }}
-        className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full text-[11px] font-mono uppercase tracking-[0.18em] text-white/70 border border-white/15 bg-white/5 mb-8"
-      >
-        <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
-        Test de personalidad
-      </motion.span>
-
-      <motion.h1
-        initial={{ opacity: 0, y: 14 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ delay: 0.12 }}
-        className="font-serif text-white leading-[0.98] text-5xl sm:text-6xl md:text-7xl mb-6"
-        style={{ fontFamily: 'var(--font-serif)' }}
-      >
-        ¿Cuál de los<br />
-        <span style={{ background: 'linear-gradient(120deg,#FFB627,#FF4D9D 50%,#19C9F0)', WebkitBackgroundClip: 'text', backgroundClip: 'text', color: 'transparent' }}>
-          16 sos?
-        </span>
-      </motion.h1>
-
-      <motion.p
-        initial={{ opacity: 0, y: 12 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ delay: 0.2 }}
-        className="text-white/70 text-lg max-w-md mb-8 leading-relaxed"
-      >
-        {total} preguntas calibradas para encontrar tu arquetipo real entre 16 perfiles. Respondé con el instinto: tu primera reacción es la más sincera.
-      </motion.p>
-
-      <motion.div
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ delay: 0.28 }}
-        className="flex flex-wrap items-center justify-center gap-2 mb-10"
-      >
-        {dims.map((d) => (
-          <span
-            key={d.label}
-            className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-medium text-white/80 border border-white/10 bg-white/5"
-          >
-            <span className="w-2 h-2 rounded-full" style={{ background: d.c, boxShadow: `0 0 10px ${d.c}` }} />
-            {d.label}
-          </span>
-        ))}
-      </motion.div>
-
-      <motion.button
-        initial={{ opacity: 0, y: 10 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ delay: 0.34 }}
-        whileHover={{ scale: 1.04 }}
-        whileTap={{ scale: 0.96 }}
-        onClick={onStart}
-        className="inline-flex items-center gap-3 px-10 py-4 rounded-full text-base font-bold text-[#0a0a14]"
-        style={{ background: 'linear-gradient(120deg,#FFB627,#FF4D9D 55%,#B14BF4)', boxShadow: '0 12px 44px rgba(255,77,157,0.4)' }}
-      >
-        Empezar
-        <svg width="18" height="18" viewBox="0 0 18 18" fill="none">
-          <path d="M3 9h12M10 4l5 5-5 5" stroke="currentColor" strokeWidth="2.3" strokeLinecap="round" strokeLinejoin="round" />
-        </svg>
-      </motion.button>
-
-      <motion.p
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ delay: 0.42 }}
-        className="mt-6 font-mono text-[11px] tracking-wider text-white/40"
-      >
-        ⚡ 2 minutos · sin respuestas correctas · solo vos
-      </motion.p>
-    </motion.section>
   );
 }
 
