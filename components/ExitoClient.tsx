@@ -168,6 +168,9 @@ export default function ExitoClient({ code, paymentId, premium, amount, currency
   const archetype = ARCHETYPES[code];
   const [copied,    setCopied]    = useState(false);
   const [reportUrl, setReportUrl] = useState('');
+  const [garOpen,   setGarOpen]   = useState(false);
+  const [garMotivo, setGarMotivo] = useState('');
+  const [garStatus, setGarStatus] = useState<'idle' | 'sending' | 'sent' | 'error'>('idle');
 
   // Save the access link locally so the user can come back later from this device
   useEffect(() => {
@@ -198,6 +201,24 @@ export default function ExitoClient({ code, paymentId, premium, amount, currency
     navigator.clipboard.writeText(reportUrl).catch(() => {});
     setCopied(true);
     setTimeout(() => setCopied(false), 2000);
+  };
+
+  const handleGarantia = async () => {
+    if (garStatus === 'sending') return;
+    setGarStatus('sending');
+    try {
+      const token = new URLSearchParams(window.location.search).get('token') ?? '';
+      const res = await fetch('/api/garantia', {
+        method:  'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body:    JSON.stringify({ token, motivo: garMotivo }),
+      });
+      if (!res.ok) throw new Error('request failed');
+      setGarStatus('sent');
+    } catch {
+      setGarStatus('error');
+      setTimeout(() => setGarStatus('idle'), 3000);
+    }
   };
 
   return (
@@ -401,9 +422,56 @@ export default function ExitoClient({ code, paymentId, premium, amount, currency
             </button>
           </motion.div>
 
-          <p className="text-center font-mono text-[10px] text-ink-faint tracking-wider pb-4">
-            Este reporte es tuyo. Guardá el link para volver cuando quieras.
-          </p>
+          {/* Footer note + guarantee request */}
+          <div className="text-center pb-4">
+            {garStatus === 'sent' ? (
+              <p className="font-mono text-[10px] tracking-wider text-ink-mute">
+                ✓ Recibimos tu solicitud de garantía. La evaluamos y te respondemos al email de tu compra.
+              </p>
+            ) : !garOpen ? (
+              <p className="font-mono text-[10px] text-ink-faint tracking-wider">
+                Este reporte es tuyo. Guardá el link para volver cuando quieras. ·{' '}
+                <button
+                  onClick={() => setGarOpen(true)}
+                  className="underline hover:text-ink transition-colors"
+                >
+                  ¿Problemas con tu compra?
+                </button>
+              </p>
+            ) : (
+              <div className="max-w-sm mx-auto flex flex-col gap-2 text-left">
+                <p className="font-mono text-[10px] tracking-wider text-ink-mute text-center">
+                  Contanos qué pasó y evaluamos tu caso.
+                </p>
+                <textarea
+                  value={garMotivo}
+                  onChange={(e) => setGarMotivo(e.target.value)}
+                  placeholder="Motivo (opcional)"
+                  rows={3}
+                  maxLength={1000}
+                  className="w-full px-3 py-2.5 rounded-lg border border-line bg-bg-elev text-ink text-sm placeholder:text-ink-faint focus:outline-none focus:border-ink-soft transition-colors resize-none"
+                />
+                {garStatus === 'error' && (
+                  <p className="text-xs text-red-400 text-center">No pudimos enviar la solicitud. Intentá de nuevo.</p>
+                )}
+                <div className="flex gap-2 justify-center">
+                  <button
+                    onClick={() => { setGarOpen(false); setGarStatus('idle'); }}
+                    className="px-4 py-2 rounded-pill border border-line font-mono text-[10px] tracking-widest uppercase text-ink-mute hover:text-ink transition-colors"
+                  >
+                    Cancelar
+                  </button>
+                  <button
+                    onClick={handleGarantia}
+                    disabled={garStatus === 'sending'}
+                    className="px-4 py-2 rounded-pill bg-ink text-bg-card font-mono text-[10px] tracking-widest uppercase hover:opacity-80 transition-opacity disabled:opacity-50"
+                  >
+                    {garStatus === 'sending' ? 'Enviando…' : 'Pedir garantía'}
+                  </button>
+                </div>
+              </div>
+            )}
+          </div>
 
         </div>
       </div>

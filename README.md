@@ -54,10 +54,13 @@ Ver [.env.example](.env.example) — los nombres ahí son los que el código lee
   de la verificación del token.
 - El webhook de MP exige firma HMAC en producción (`MP_WEBHOOK_SECRET`); además todo pago se re-verifica
   contra la API de MP en `lib/processPayment.ts` (estado, arquetipo y monto).
-- Las APIs públicas (`/api/checkout`, `/api/lead`, `/api/contact`) y la página `/exito` tienen rate
-  limiting in-memory por IP (`lib/rateLimit.ts`). Es per-instancia: si el tráfico crece, migrar a
-  Upstash/Vercel KV manteniendo la misma API.
+- Las APIs públicas (`/api/checkout`, `/api/lead`, `/api/contact`, `/api/garantia`) y la página `/exito`
+  tienen rate limiting in-memory por IP (`lib/rateLimit.ts`). Es per-instancia: si el tráfico crece,
+  migrar a Upstash/Vercel KV manteniendo la misma API.
 - `/api/lead` toma email y nombre de la sesión NextAuth del servidor, nunca del body.
+- `/api/garantia`: el comprador pide la garantía con su access token; la solicitud queda en
+  `contact_messages` (source `prisma-garantia`) con las horas transcurridas desde la compra para
+  evaluar caso por caso. No hay reembolso automático.
 
 ## Scripts
 

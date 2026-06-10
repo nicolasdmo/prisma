@@ -77,12 +77,14 @@ export default function TerminosPage() {
 
           <section>
             <h2 className="font-serif text-2xl text-ink mb-3" style={{ fontFamily: 'var(--font-serif)' }}>
-              5. Reembolsos
+              5. Garantía y reembolsos
             </h2>
             <p>
-              Por tratarse de contenido digital de acceso inmediato, una vez entregado el reporte la compra
-              no es reembolsable. De todos modos, si tuviste un problema con tu pago o no recibiste tu
-              reporte, escribinos desde el botón de contacto y lo resolvemos.
+              Tu compra incluye una garantía. Si tuviste un problema con el reporte o no quedaste conforme,
+              podés solicitarla desde el propio reporte (opción «¿Problemas con tu compra?») o desde el botón
+              de contacto. Cada solicitud se evalúa de forma individual — consideramos, entre otros factores,
+              el tiempo transcurrido desde la compra — y, si corresponde, realizamos el reembolso a través
+              de MercadoPago. Si pagaste y no recibiste tu reporte, escribinos y lo resolvemos siempre.
             </p>
           </section>
 

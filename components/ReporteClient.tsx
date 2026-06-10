@@ -154,7 +154,7 @@ export default function ReporteClient({ code }: { code: string }) {
                 )}
               </button>
               <p className="font-mono text-[10px] tracking-wider text-ink-faint">
-                Pago único · Acceso inmediato · 30 días de garantía
+                Pago único · Acceso inmediato · Compra con garantía
               </p>
             </motion.div>
           </div>
