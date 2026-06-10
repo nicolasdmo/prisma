@@ -40,17 +40,9 @@ export async function processApprovedPayment(paymentId: string): Promise<Payment
 
   if (!email || !archetypeCode || !ARCHETYPES[archetypeCode]) return null;
 
-  // ── Guard against under-payment / tampered amounts ────────────
-  // Legit payments always match: the preference is created server-side with a
-  // fixed price, so this only rejects manipulated or wrong-product payments.
-  // 5% tolerance absorbs rounding / minor promo differences.
-  const expected = Number(process.env.MP_PRICE ?? PRICE_AMOUNT);
-  if (expected > 0 && amount < expected * 0.95) {
-    console.error(`[processPayment] Amount ${amount} ${currency} below expected ${expected} for payment ${paymentId} — rejecting`);
-    return null;
-  }
-
-  // ── Idempotent upsert into purchases ──────────────────────────
+  // ── Idempotent: an already-recorded purchase always resolves ──
+  // This must run BEFORE the amount guard so old buyers keep access
+  // after a price increase (their original amount no longer matches).
   const supabase = getSupabaseAdmin();
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -67,6 +59,16 @@ export async function processApprovedPayment(paymentId: string): Promise<Payment
       accessToken:    (existing as { access_token: string }).access_token,
       alreadyExisted: true,
     };
+  }
+
+  // ── Guard against under-payment / tampered amounts ────────────
+  // Legit payments always match: the preference is created server-side with a
+  // fixed price, so this only rejects manipulated or wrong-product payments.
+  // 5% tolerance absorbs rounding / minor promo differences.
+  const expected = Number(process.env.MP_PRICE ?? PRICE_AMOUNT);
+  if (expected > 0 && amount < expected * 0.95) {
+    console.error(`[processPayment] Amount ${amount} ${currency} below expected ${expected} for payment ${paymentId} — rejecting`);
+    return null;
   }
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any

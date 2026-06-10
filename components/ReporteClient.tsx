@@ -2,11 +2,9 @@
 
 import { useState } from 'react';
 import { motion } from 'framer-motion';
-import { track } from '@vercel/analytics';
 import { Analytics } from '@/lib/analytics';
 import Link from 'next/link';
 import { ARCHETYPES } from '@/data/archetypes';
-import { PREMIUM } from '@/data/premiumContent';
 import { PRICE_DISPLAY } from '@/lib/config';
 import { getContrastText } from '@/lib/colorUtils';
 
@@ -40,10 +38,9 @@ function IncludedCard({ icon, title, items, color }: {
 
 export default function ReporteClient({ code }: { code: string }) {
   const archetype = ARCHETYPES[code.toUpperCase()];
-  const premium   = PREMIUM[code.toUpperCase()];
   const [loading, setLoading] = useState(false);
 
-  if (!archetype || !premium) {
+  if (!archetype) {
     return (
       <div className="min-h-screen flex items-center justify-center text-center px-6">
         <div>
@@ -59,7 +56,6 @@ export default function ReporteClient({ code }: { code: string }) {
   // ── Initiate MercadoPago Checkout Pro ───────────────────────
   const handlePurchase = async () => {
     setLoading(true);
-    track('checkout_started', { code });
     Analytics.checkoutStarted(code);
     try {
       const res  = await fetch('/api/checkout', {
@@ -206,12 +202,13 @@ export default function ReporteClient({ code }: { code: string }) {
             ))}
           </div>
 
-          {/* Preview snippet (blurred) */}
+          {/* Preview snippet (blurred) — static placeholder text on purpose:
+              real premium content must never reach this public page's bundle. */}
           <div className="mb-10 relative rounded-lg border border-line overflow-hidden">
             <div className="p-6 blur-sm pointer-events-none select-none">
               <p className="eyebrow mb-3">Análisis profundo</p>
               <p className="text-ink-soft text-sm leading-relaxed">
-                {premium.deepDive.split('\n\n')[0].slice(0, 120)}...
+                Hay algo que pocas personas ven de vos: detrás de tu forma de moverte por el mundo hay un patrón que se repite en tus vínculos, tu trabajo y tus decisiones...
               </p>
             </div>
             <div className="absolute inset-0 flex flex-col items-center justify-center bg-bg/60 backdrop-blur-sm gap-2">

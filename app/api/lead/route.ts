@@ -1,35 +1,38 @@
 import { NextRequest, NextResponse } from 'next/server';
+import { auth } from '@/lib/auth';
 import { getSupabase } from '@/lib/supabase';
 import { ARCHETYPE_CODES } from '@/data/archetypes';
+import { rateLimit, clientIp } from '@/lib/rateLimit';
 
-const FAKE_DOMAINS  = ['ejemplo.com', 'test.com', 'prueba.com', 'fake.com', 'example.com', 'yopmail.com'];
-const FAKE_KEYWORDS = ['test', 'prueba', 'prisma', 'fake', 'admin'];
+const FAKE_DOMAINS = ['ejemplo.com', 'test.com', 'prueba.com', 'fake.com', 'example.com', 'yopmail.com'];
+// Whole-word match so real names like "Testa" or "Adminte" don't get filtered.
+const FAKE_NAME_RE = /\b(test|prueba|prisma|fake|admin)\b/i;
 
 function isFakeEntry(name: string, email: string): boolean {
-  const nameLower  = name.toLowerCase();
-  const emailLower = email.toLowerCase();
   return (
-    FAKE_KEYWORDS.some((k) => nameLower.includes(k)) ||
-    FAKE_DOMAINS.some((d) => emailLower.endsWith(`@${d}`))
+    FAKE_NAME_RE.test(name) ||
+    FAKE_DOMAINS.some((d) => email.toLowerCase().endsWith(`@${d}`))
   );
 }
 
 export async function POST(req: NextRequest) {
   try {
+    if (!rateLimit(`lead:${clientIp(req.headers)}`, 5, 60_000)) {
+      return NextResponse.json({ error: 'Demasiados intentos.' }, { status: 429 });
+    }
+
+    // Identity comes from the server-side session, never from the request
+    // body — otherwise anyone can stuff the leads table with fake emails.
+    const session = await auth();
+    const email   = session?.user?.email?.trim().toLowerCase() ?? '';
+    const name    = session?.user?.name?.trim() ?? '';
+
+    if (!email) {
+      return NextResponse.json({ error: 'No autenticado.' }, { status: 401 });
+    }
+
     const body = await req.json();
-    const name          = (body.name ?? '').trim();
-    const email         = (body.email ?? '').trim().toLowerCase();
     const archetypeCode = (body.archetypeCode ?? '').toUpperCase();
-
-    // Basic validation
-    if (!name || !email || !archetypeCode) {
-      return NextResponse.json({ error: 'Faltan datos.' }, { status: 400 });
-    }
-
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    if (!emailRegex.test(email)) {
-      return NextResponse.json({ error: 'Email inválido.' }, { status: 400 });
-    }
 
     if (!ARCHETYPE_CODES.includes(archetypeCode)) {
       return NextResponse.json({ error: 'Código de arquetipo inválido.' }, { status: 400 });

@@ -1,8 +1,13 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { getSupabaseAdmin } from '@/lib/supabaseAdmin';
+import { rateLimit, clientIp } from '@/lib/rateLimit';
 
 export async function POST(req: NextRequest) {
   try {
+    if (!rateLimit(`contact:${clientIp(req.headers)}`, 3, 60_000)) {
+      return NextResponse.json({ error: 'Demasiados mensajes. Esperá un minuto.' }, { status: 429 });
+    }
+
     const { name, email, message } = await req.json();
 
     const cleanMessage = (message ?? '').toString().trim();

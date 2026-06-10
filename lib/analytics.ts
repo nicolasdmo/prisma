@@ -20,7 +20,7 @@ export function trackEvent(
 // ── Named events ────────────────────────────────────────────────
 
 export const Analytics = {
-  /** User completed the 12-question test and saw their archetype */
+  /** User completed the 16-question test and saw their archetype */
   testCompleted: (archetypeCode: string) =>
     trackEvent('test_completed', { archetype: archetypeCode }),
 
@@ -32,12 +32,14 @@ export const Analytics = {
   checkoutStarted: (archetypeCode: string) =>
     trackEvent('checkout_started', { archetype: archetypeCode }),
 
-  /** User successfully purchased the premium report */
-  purchase: (archetypeCode: string, paymentId: string) =>
+  /** User successfully purchased the premium report.
+   *  `value` + `currency` are required for GA4 to report revenue. */
+  purchase: (archetypeCode: string, paymentId: string, value: number, currency: string) =>
     trackEvent('purchase', {
       transaction_id: paymentId,
       archetype:      archetypeCode,
-      currency:       'ARS',
+      value,
+      currency,
     }),
 
   /** User viewed their unlocked premium report */

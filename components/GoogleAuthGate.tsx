@@ -7,43 +7,38 @@ import { motion } from 'framer-motion';
 
 interface Props {
   archetypeCode: string;
-  color:         string;
-  onUnlock:      (email: string, name: string) => void;
+  onUnlock:      () => void;
 }
 
-export default function GoogleAuthGate({ archetypeCode, color: _color, onUnlock }: Props) {
+export default function GoogleAuthGate({ archetypeCode, onUnlock }: Props) {
   const { data: session, status } = useSession();
   const [signingIn, setSigningIn] = useState(false);
-  const [error,     setError]     = useState('');
   const unlockedRef = useRef(false);
 
-  const doUnlock = useCallback(
-    (email: string, name: string) => {
-      if (unlockedRef.current) return; // prevent double-fire
-      unlockedRef.current = true;
+  const doUnlock = useCallback(() => {
+    if (unlockedRef.current) return; // prevent double-fire
+    unlockedRef.current = true;
 
-      fetch('/api/lead', {
-        method:  'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body:    JSON.stringify({ email, name, archetypeCode }),
-      }).catch(() => {});
+    // The server takes email/name from the session — only the archetype travels.
+    fetch('/api/lead', {
+      method:  'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body:    JSON.stringify({ archetypeCode }),
+    }).catch(() => {});
 
-      Analytics.login(archetypeCode);
-      onUnlock(email, name);
-    },
-    [archetypeCode, onUnlock],
-  );
+    Analytics.login(archetypeCode);
+    onUnlock();
+  }, [archetypeCode, onUnlock]);
 
   // Fire unlock as soon as we detect an authenticated session
   useEffect(() => {
     if (status === 'authenticated' && session?.user?.email) {
-      doUnlock(session.user.email, session.user.name ?? '');
+      doUnlock();
     }
   }, [status, session, doUnlock]);
 
   const handleSignIn = () => {
     setSigningIn(true);
-    setError('');
     // NextAuth redirects to Google and back to callbackUrl after login
     signIn('google', { callbackUrl: window.location.pathname });
     // Browser navigates away — no need to reset signingIn
@@ -91,10 +86,6 @@ export default function GoogleAuthGate({ archetypeCode, color: _color, onUnlock 
         )}
         {signingIn ? 'Redirigiendo a Google...' : 'Continuar con Google'}
       </button>
-
-      {error && (
-        <p className="text-xs text-center text-red-400 max-w-xs">{error}</p>
-      )}
 
       <p className="font-mono text-[10px] text-ink-faint tracking-wider text-center">
         Gratis · Solo para identificarte · No spam

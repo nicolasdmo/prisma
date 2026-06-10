@@ -4,7 +4,10 @@ import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import Link from 'next/link';
 import { ARCHETYPES } from '@/data/archetypes';
-import { PREMIUM, type PremiumContent } from '@/data/premiumContent';
+// type-only import: the premium catalogue itself must NEVER be imported here —
+// it would ship in the public client bundle. The server page (ver/page.tsx)
+// verifies the access token and passes only the purchased archetype's content.
+import type { PremiumContent } from '@/data/premiumContent';
 import { Analytics } from '@/lib/analytics';
 
 // ── Reused sub-components ────────────────────────────────────────
@@ -117,11 +120,52 @@ function CareerBlock({ premium, color }: { premium: PremiumContent; color: strin
   );
 }
 
+// ── Complementary archetype card ────────────────────────────────
+
+function ComplementaryCard({ code, myColor }: { code: string; myColor: string }) {
+  const a = ARCHETYPES[code];
+  if (!a) return null;
+  return (
+    <Link href={`/r/${code}`} className="block group">
+      <motion.div
+        whileHover={{ y: -2 }}
+        transition={{ duration: 0.2 }}
+        className="rounded-xl border border-line bg-bg-elev overflow-hidden transition-colors group-hover:border-ink-soft"
+      >
+        <div className="h-1 w-full" style={{ background: `linear-gradient(90deg, ${myColor}, ${a.color})` }} />
+        <div className="p-5 flex items-center gap-4">
+          <div
+            className="w-12 h-12 rounded-xl flex items-center justify-center text-2xl shrink-0"
+            style={{ background: `${a.color}18` }}
+          >
+            {a.emoji}
+          </div>
+          <div className="flex-1 min-w-0">
+            <div className="flex items-center gap-2 mb-0.5">
+              <p className="font-serif text-base text-ink" style={{ fontFamily: 'var(--font-serif)' }}>{a.name}</p>
+              <span className="font-mono text-[9px] tracking-widest px-1.5 py-0.5 rounded border" style={{ borderColor: `${a.color}40`, color: a.color }}>{a.code}</span>
+            </div>
+            <p className="text-ink-mute text-xs leading-snug truncate">{a.tagline}</p>
+          </div>
+          <span className="text-ink-faint group-hover:text-ink transition-colors shrink-0">→</span>
+        </div>
+      </motion.div>
+    </Link>
+  );
+}
+
 // ── Main ─────────────────────────────────────────────────────────
 
-export default function ExitoClient({ code, paymentId }: { code: string; paymentId: string }) {
+interface ExitoProps {
+  code:      string;
+  paymentId: string;
+  premium:   PremiumContent;
+  amount:    number;
+  currency:  string;
+}
+
+export default function ExitoClient({ code, paymentId, premium, amount, currency }: ExitoProps) {
   const archetype = ARCHETYPES[code];
-  const premium   = PREMIUM[code];
   const [copied,    setCopied]    = useState(false);
   const [reportUrl, setReportUrl] = useState('');
 
@@ -132,10 +176,20 @@ export default function ExitoClient({ code, paymentId }: { code: string; payment
     // eslint-disable-next-line react-hooks/set-state-in-effect -- sync URL from window on mount
     setReportUrl(url);
     try { localStorage.setItem(`prisma_report_${code}`, url); } catch {}
-    // Track purchase + report view
-    Analytics.purchase(code, paymentId);
+
+    // Track the purchase exactly once per payment — revisits of the permanent
+    // link must not inflate GA4 revenue.
+    try {
+      const trackedKey = `prisma_purchase_tracked_${paymentId}`;
+      if (!localStorage.getItem(trackedKey)) {
+        Analytics.purchase(code, paymentId, amount, currency);
+        localStorage.setItem(trackedKey, '1');
+      }
+    } catch {
+      Analytics.purchase(code, paymentId, amount, currency);
+    }
     Analytics.reportViewed(code);
-  }, [code, paymentId]);
+  }, [code, paymentId, amount, currency]);
 
   if (!archetype || !premium) return null;
 
@@ -312,6 +366,17 @@ export default function ExitoClient({ code, paymentId }: { code: string; payment
                 <p className="font-mono text-[10px] tracking-wider text-ink-mute uppercase mb-2">Cómo manejás el conflicto</p>
                 <p className="text-ink-soft text-sm leading-relaxed">{premium.conflictPattern}</p>
               </div>
+            </div>
+          </Section>
+
+          <div className="h-px bg-line" />
+
+          {/* Complementary archetypes */}
+          <Section title="Con quién encajás" subtitle="Los dos arquetipos que mejor complementan tu forma de ver el mundo." delay={0.45}>
+            <div className="flex flex-col gap-3">
+              {archetype.complementaryCodes.map((c) => (
+                <ComplementaryCard key={c} code={c} myColor={archetype.color} />
+              ))}
             </div>
           </Section>
 

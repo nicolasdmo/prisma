@@ -1,7 +1,11 @@
 import { redirect, notFound } from 'next/navigation';
+import { headers } from 'next/headers';
 import Link from 'next/link';
+import type { Metadata } from 'next';
 import { ARCHETYPES } from '@/data/archetypes';
 import { processApprovedPayment } from '@/lib/processPayment';
+import { rateLimit, clientIp } from '@/lib/rateLimit';
+import AutoRefresh from '@/components/AutoRefresh';
 
 interface Props {
   params:       Promise<{ code: string }>;
@@ -11,6 +15,11 @@ interface Props {
     status?:       string;
   }>;
 }
+
+// Transactional page — keep it out of search engines.
+export const metadata: Metadata = {
+  robots: { index: false, follow: false },
+};
 
 export default async function ExitoPage({ params, searchParams }: Props) {
   const { code } = await params;
@@ -28,14 +37,20 @@ export default async function ExitoPage({ params, searchParams }: Props) {
   let processingError = false;
 
   if (paymentId) {
-    try {
-      const result = await processApprovedPayment(paymentId);
-      if (result && result.archetypeCode === upper) {
-        redirectUrl = `/reporte/${upper}/ver?token=${result.accessToken}`;
+    // Throttle per IP: payment lookups take any payment_id from the URL, so
+    // without a limit this page could be used to enumerate payment ids.
+    // 20/min comfortably covers the AutoRefresh polling of a real buyer.
+    const ip = clientIp(await headers());
+    if (rateLimit(`exito:${ip}`, 20, 60_000)) {
+      try {
+        const result = await processApprovedPayment(paymentId);
+        if (result && result.archetypeCode === upper) {
+          redirectUrl = `/reporte/${upper}/ver?token=${result.accessToken}`;
+        }
+      } catch (err) {
+        console.error('[exito] processPayment error:', err);
+        processingError = true;
       }
-    } catch (err) {
-      console.error('[exito] processPayment error:', err);
-      processingError = true;
     }
   }
 
@@ -47,8 +62,9 @@ export default async function ExitoPage({ params, searchParams }: Props) {
 
   return (
     <>
-      {/* Auto-refresh every 4s so cash payments / late webhooks eventually land */}
-      {!processingError && <meta httpEquiv="refresh" content="4" />}
+      {/* Poll the server page so cash payments / late webhooks eventually land.
+          Caps out after ~2 min — the "Refrescar" button covers the long tail. */}
+      {!processingError && <AutoRefresh />}
 
       <main className="min-h-screen flex flex-col items-center justify-center px-6 text-center gap-8 relative">
         <div

@@ -2,9 +2,15 @@ import { NextRequest, NextResponse } from 'next/server';
 import { MercadoPagoConfig, Preference } from 'mercadopago';
 import { ARCHETYPES } from '@/data/archetypes';
 import { SITE_URL, PRICE_AMOUNT, PRICE_CURRENCY } from '@/lib/config';
+import { rateLimit, clientIp } from '@/lib/rateLimit';
 
 export async function POST(req: NextRequest) {
   try {
+    // A real buyer clicks "comprar" a handful of times at most.
+    if (!rateLimit(`checkout:${clientIp(req.headers)}`, 10, 60_000)) {
+      return NextResponse.json({ error: 'Demasiados intentos. Esperá un minuto.' }, { status: 429 });
+    }
+
     const { code } = await req.json();
     const upper = code?.toUpperCase();
     const archetype = ARCHETYPES[upper];

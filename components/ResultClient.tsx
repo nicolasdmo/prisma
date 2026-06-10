@@ -127,45 +127,6 @@ function AxisMeter({ poleA, poleB, label, score, color, delay }: {
   );
 }
 
-// ── Context card — redesigned ────────────────────────────────────
-const CTX_ICONS: Record<string, string> = {
-  '💼': '💼', '🤝': '🤝', '🔥': '🔥', '❤️': '❤️',
-};
-
-function ContextCard({ icon, title, text, color, delay }: {
-  icon: string; title: string; text: string; color: string; delay: number;
-}) {
-  return (
-    <motion.div
-      initial={{ opacity: 0, y: 14 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ delay, duration: 0.45 }}
-      className="rounded-xl p-5 border border-line bg-bg-elev flex flex-col gap-3 relative overflow-hidden"
-    >
-      {/* Subtle color accent top-left */}
-      <div
-        className="absolute top-0 left-0 w-24 h-24 rounded-br-full pointer-events-none"
-        style={{ background: `${color}08` }}
-      />
-      <div className="flex items-center gap-3 relative">
-        <div
-          className="w-9 h-9 rounded-lg flex items-center justify-center text-lg shrink-0"
-          style={{ background: `${color}18` }}
-        >
-          {icon}
-        </div>
-        <span
-          className="font-mono text-[10px] tracking-widest uppercase"
-          style={{ color: `${color}cc` }}
-        >
-          {title}
-        </span>
-      </div>
-      <p className="text-ink text-sm leading-relaxed relative">{text}</p>
-    </motion.div>
-  );
-}
-
 // ── Strength pill ────────────────────────────────────────────────
 function StrengthPill({ label, color, delay }: { label: string; color: string; delay: number }) {
   return (
@@ -179,40 +140,6 @@ function StrengthPill({ label, color, delay }: { label: string; color: string; d
       <span className="text-sm shrink-0" style={{ color }}>✦</span>
       <span className="text-ink-soft text-sm">{label}</span>
     </motion.div>
-  );
-}
-
-// ── Complementary card — redesigned ─────────────────────────────
-function ComplementaryCard({ code, myColor }: { code: string; myColor: string }) {
-  const a = ARCHETYPES[code];
-  if (!a) return null;
-  return (
-    <Link href={`/r/${code}`} className="block group">
-      <motion.div
-        whileHover={{ y: -2 }}
-        transition={{ duration: 0.2 }}
-        className="rounded-xl border border-line bg-bg-elev overflow-hidden transition-colors group-hover:border-ink-soft"
-      >
-        {/* Color band */}
-        <div className="h-1 w-full" style={{ background: `linear-gradient(90deg, ${myColor}, ${a.color})` }} />
-        <div className="p-5 flex items-center gap-4">
-          <div
-            className="w-12 h-12 rounded-xl flex items-center justify-center text-2xl shrink-0"
-            style={{ background: `${a.color}18` }}
-          >
-            {a.emoji}
-          </div>
-          <div className="flex-1 min-w-0">
-            <div className="flex items-center gap-2 mb-0.5">
-              <p className="font-serif text-base text-ink" style={{ fontFamily: 'var(--font-serif)' }}>{a.name}</p>
-              <span className="font-mono text-[9px] tracking-widest px-1.5 py-0.5 rounded border" style={{ borderColor: `${a.color}40`, color: a.color }}>{a.code}</span>
-            </div>
-            <p className="text-ink-mute text-xs leading-snug truncate">{a.tagline}</p>
-          </div>
-          <span className="text-ink-faint group-hover:text-ink transition-colors shrink-0">→</span>
-        </div>
-      </motion.div>
-    </Link>
   );
 }
 
@@ -604,7 +531,7 @@ export default function ResultClient({ code }: { code: string }) {
     } catch {}
   }, [code]);
 
-  const handleUnlock = useCallback((_email: string, _name: string) => {
+  const handleUnlock = useCallback(() => {
     localStorage.setItem('prisma_unlocked', code.toUpperCase());
     Analytics.resultUnlocked(code.toUpperCase());
     setUnlocked(true);
@@ -781,7 +708,6 @@ export default function ResultClient({ code }: { code: string }) {
 
                 <GoogleAuthGate
                   archetypeCode={archetype.code}
-                  color={archetype.color}
                   onUnlock={handleUnlock}
                 />
               </motion.div>

@@ -10,16 +10,15 @@ import ReporteEmail from '@/emails/ReporteEmail';
 
 /**
  * Verifies the webhook came from MercadoPago via x-signature HMAC.
- * Skipped (returns true) when MP_WEBHOOK_SECRET is not set.
+ * In production a missing MP_WEBHOOK_SECRET rejects the request outright;
+ * in development it's skipped so local testing doesn't need the secret.
  */
 function verifyMpSignature(req: NextRequest, dataId: string): boolean {
   const secret = process.env.MP_WEBHOOK_SECRET;
   if (!secret) {
-    // Without a secret we can't verify authenticity. processApprovedPayment still
-    // re-checks the payment against MercadoPago (the real defence), so we don't
-    // hard-fail — but warn loudly in production so it gets configured.
     if (process.env.NODE_ENV === 'production') {
-      console.error('[webhook/mp] MP_WEBHOOK_SECRET not set — webhook signature NOT verified. Set it in your environment to harden this endpoint.');
+      console.error('[webhook/mp] MP_WEBHOOK_SECRET not set — rejecting webhook. Configure it in Vercel.');
+      return false;
     }
     return true;
   }
@@ -55,7 +54,7 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ ok: true, skipped: 'not a payment event' });
     }
 
-    const paymentId = String(body.data?.id);
+    const paymentId = body.data?.id ? String(body.data.id) : '';
     if (!paymentId) return NextResponse.json({ error: 'No payment id' }, { status: 400 });
 
     if (!verifyMpSignature(req, paymentId)) {

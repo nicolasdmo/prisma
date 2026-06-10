@@ -1,9 +1,15 @@
 import Link from 'next/link';
+import type { Metadata } from 'next';
 import { ARCHETYPES } from '@/data/archetypes';
 
 interface Props {
   params: Promise<{ code: string }>;
 }
+
+// Transactional page — keep it out of search engines.
+export const metadata: Metadata = {
+  robots: { index: false, follow: false },
+};
 
 export default async function PendientePage({ params }: Props) {
   const { code } = await params;
