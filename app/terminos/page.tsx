@@ -71,7 +71,10 @@ export default function TerminosPage() {
             <ul className="list-disc pl-5 space-y-2">
               <li>El Reporte Completo tiene un precio de <strong>{PRICE_DISPLAY}</strong> (salvo promociones vigentes).</li>
               <li>El pago se procesa de forma segura a través de <strong>MercadoPago</strong>.</li>
-              <li>Es un <strong>producto digital</strong>: una vez confirmado el pago, accedés al reporte de inmediato y te lo enviamos por email.</li>
+              <li>Es un <strong>producto digital</strong>: una vez confirmado el pago, accedés al reporte de inmediato a través de un link de acceso permanente.</li>
+              <li>Guardá ese link. Si lo perdés, podés recuperarlo en{' '}
+                <Link href="/recuperar" className="text-ink underline">/recuperar</Link>{' '}
+                con tu número de operación de MercadoPago y el email con el que pagaste.</li>
             </ul>
           </section>
 

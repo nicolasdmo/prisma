@@ -41,7 +41,7 @@ export default async function ExitoPage({ params, searchParams }: Props) {
     // without a limit this page could be used to enumerate payment ids.
     // 20/min comfortably covers the AutoRefresh polling of a real buyer.
     const ip = clientIp(await headers());
-    if (rateLimit(`exito:${ip}`, 20, 60_000)) {
+    if (await rateLimit(`exito:${ip}`, 20, 60_000)) {
       try {
         const result = await processApprovedPayment(paymentId);
         if (result && result.archetypeCode === upper) {
@@ -92,7 +92,12 @@ export default async function ExitoPage({ params, searchParams }: Props) {
             <p className="text-ink-mute text-sm leading-relaxed">
               {processingError
                 ? 'Si el pago salió bien, refrescá esta página en unos segundos. Si el problema persiste, contactanos.'
-                : 'Esta página se va a actualizar sola apenas MercadoPago confirme el pago.'}
+                : 'Esta página se va a actualizar sola apenas MercadoPago confirme el pago.'}{' '}
+              También podés recuperar tu acceso cuando quieras desde{' '}
+              <Link href="/recuperar" className="text-ink underline">
+                recuperar mi reporte
+              </Link>
+              , con tu número de operación de MercadoPago.
             </p>
           </div>
 

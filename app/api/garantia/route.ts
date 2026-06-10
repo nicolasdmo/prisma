@@ -10,7 +10,7 @@ import { rateLimit, clientIp } from '@/lib/rateLimit';
  */
 export async function POST(req: NextRequest) {
   try {
-    if (!rateLimit(`garantia:${clientIp(req.headers)}`, 3, 60_000)) {
+    if (!(await rateLimit(`garantia:${clientIp(req.headers)}`, 3, 60_000))) {
       return NextResponse.json({ error: 'Demasiados intentos.' }, { status: 429 });
     }
 

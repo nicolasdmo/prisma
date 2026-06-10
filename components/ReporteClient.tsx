@@ -39,6 +39,7 @@ function IncludedCard({ icon, title, items, color }: {
 export default function ReporteClient({ code }: { code: string }) {
   const archetype = ARCHETYPES[code.toUpperCase()];
   const [loading, setLoading] = useState(false);
+  const [checkoutError, setCheckoutError] = useState('');
 
   if (!archetype) {
     return (
@@ -56,6 +57,7 @@ export default function ReporteClient({ code }: { code: string }) {
   // ── Initiate MercadoPago Checkout Pro ───────────────────────
   const handlePurchase = async () => {
     setLoading(true);
+    setCheckoutError('');
     Analytics.checkoutStarted(code);
     try {
       const res  = await fetch('/api/checkout', {
@@ -70,7 +72,7 @@ export default function ReporteClient({ code }: { code: string }) {
       }
     } catch (err) {
       console.error(err);
-      alert('Hubo un problema al iniciar el pago. Intentá de nuevo.');
+      setCheckoutError('Hubo un problema al iniciar el pago. Esperá unos segundos e intentá de nuevo.');
       setLoading(false);
     }
   };
@@ -153,6 +155,9 @@ export default function ReporteClient({ code }: { code: string }) {
                   </>
                 )}
               </button>
+              {checkoutError && (
+                <p className="text-xs text-red-400 max-w-xs text-center">{checkoutError}</p>
+              )}
               <p className="font-mono text-[10px] tracking-wider text-ink-faint">
                 Pago único · Acceso inmediato · Compra con garantía
               </p>
@@ -188,7 +193,7 @@ export default function ReporteClient({ code }: { code: string }) {
               {
                 icon: '❤️',
                 title: 'Vínculos y relaciones',
-                items: ['Cómo amás y cómo recibís amor', 'Tu patrón en el conflicto', 'Tu estilo de comunicación afectiva', 'Lo que más necesitás en un vínculo'],
+                items: ['Cómo amás y cómo recibís amor', 'Tu patrón en el conflicto', 'Lo que necesitás en un vínculo'],
               },
             ].map((card, i) => (
               <motion.div
@@ -218,7 +223,7 @@ export default function ReporteClient({ code }: { code: string }) {
           </div>
 
           {/* Bottom CTA */}
-          <div className="text-center">
+          <div className="text-center flex flex-col items-center gap-3">
             <button
               onClick={handlePurchase}
               disabled={loading}
@@ -227,6 +232,9 @@ export default function ReporteClient({ code }: { code: string }) {
             >
               {loading ? 'Procesando...' : `Obtener mi reporte — ${PRICE_DISPLAY}`}
             </button>
+            {checkoutError && (
+              <p className="text-xs text-red-400 max-w-xs">{checkoutError}</p>
+            )}
           </div>
         </section>
 

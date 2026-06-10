@@ -17,7 +17,7 @@ function isFakeEntry(name: string, email: string): boolean {
 
 export async function POST(req: NextRequest) {
   try {
-    if (!rateLimit(`lead:${clientIp(req.headers)}`, 5, 60_000)) {
+    if (!(await rateLimit(`lead:${clientIp(req.headers)}`, 5, 60_000))) {
       return NextResponse.json({ error: 'Demasiados intentos.' }, { status: 429 });
     }
 

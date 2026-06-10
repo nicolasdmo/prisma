@@ -13,7 +13,8 @@ CREATE TABLE IF NOT EXISTS purchases (
   currency       TEXT        DEFAULT 'ARS',
   product_type   TEXT        NOT NULL DEFAULT 'prisma_report',
   access_token   TEXT        UNIQUE NOT NULL DEFAULT gen_random_uuid()::text,
-  email_sent     BOOLEAN     DEFAULT FALSE,
+  email_sent     BOOLEAN     DEFAULT FALSE, -- legacy: ya no se envian emails, columna sin uso
+
   created_at     TIMESTAMPTZ DEFAULT NOW()
 );
 

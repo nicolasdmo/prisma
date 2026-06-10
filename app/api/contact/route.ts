@@ -4,7 +4,7 @@ import { rateLimit, clientIp } from '@/lib/rateLimit';
 
 export async function POST(req: NextRequest) {
   try {
-    if (!rateLimit(`contact:${clientIp(req.headers)}`, 3, 60_000)) {
+    if (!(await rateLimit(`contact:${clientIp(req.headers)}`, 3, 60_000))) {
       return NextResponse.json({ error: 'Demasiados mensajes. Esperá un minuto.' }, { status: 429 });
     }
 

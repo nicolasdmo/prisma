@@ -66,7 +66,6 @@ export default function PrivacidadPage() {
             <ul className="list-disc pl-5 space-y-2">
               <li><strong>Supabase</strong> — base de datos donde se guardan leads y compras.</li>
               <li><strong>MercadoPago</strong> — procesamiento de pagos.</li>
-              <li><strong>Resend</strong> — envío del email con tu reporte.</li>
               <li><strong>Google</strong> — inicio de sesión y analítica.</li>
               <li><strong>Vercel</strong> — hosting y métricas de rendimiento.</li>
             </ul>

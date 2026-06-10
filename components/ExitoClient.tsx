@@ -289,7 +289,10 @@ export default function ExitoClient({ code, paymentId, premium, amount, currency
                 Tu link permanente
               </p>
               <p className="text-ink text-sm leading-relaxed">
-                Guardá este link en favoritos — es tu acceso al reporte para siempre.
+                Guardá este link en favoritos — es tu acceso al reporte para siempre. Si lo perdés,
+                podés recuperarlo en{' '}
+                <Link href="/recuperar" className="underline">/recuperar</Link>{' '}
+                con tu número de operación de MercadoPago.
               </p>
             </div>
           </div>

@@ -25,7 +25,12 @@ export default async function PendientePage({ params }: Props) {
           Tu pago está siendo procesado
         </p>
         <p className="text-ink-mute text-sm max-w-sm mx-auto">
-          MercadoPago está verificando el pago. En cuanto se acredite, vas a recibir una notificación y podrás acceder a tu reporte.
+          MercadoPago está verificando el pago. Apenas se acredite, vas a poder acceder a tu reporte
+          desde{' '}
+          <Link href="/recuperar" className="text-ink underline">
+            prisma → recuperar mi reporte
+          </Link>{' '}
+          con tu número de operación de MercadoPago y el email con el que pagaste.
         </p>
       </div>
       <div className="flex flex-col sm:flex-row gap-3">
