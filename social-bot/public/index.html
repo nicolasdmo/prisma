@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Social Media Bot</title>
+  <link rel="stylesheet" href="/css/style.css" />
+</head>
+<body>
+
+<header class="header">
+  <div class="header-inner">
+    <div class="logo">
+      <span class="logo-icon">⚡</span>
+      <span>Social Media Bot</span>
+    </div>
+    <nav class="nav">
+      <button class="nav-btn active" data-view="dashboard">Dashboard</button>
+      <button class="nav-btn" data-view="create">Nuevo Post</button>
+      <button class="nav-btn" data-view="media">Biblioteca</button>
+      <button class="nav-btn" data-view="config">Configuración</button>
+    </nav>
+  </div>
+</header>
+
+<main class="main">
+
+  <!-- ── DASHBOARD ── -->
+  <section id="view-dashboard" class="view active">
+    <div class="section-header">
+      <h1>Dashboard</h1>
+      <button class="btn btn-primary" id="btn-quick-create">+ Nuevo Post</button>
+    </div>
+
+    <div class="stats-row" id="stats-row">
+      <div class="stat-card"><span class="stat-num" id="stat-total">–</span><span class="stat-label">Total</span></div>
+      <div class="stat-card"><span class="stat-num" id="stat-published">–</span><span class="stat-label">Publicados</span></div>
+      <div class="stat-card"><span class="stat-num" id="stat-scheduled">–</span><span class="stat-label">Programados</span></div>
+      <div class="stat-card"><span class="stat-num" id="stat-failed">–</span><span class="stat-label">Fallidos</span></div>
+    </div>
+
+    <div class="filter-row">
+      <select id="filter-status" class="select">
+        <option value="">Todos los estados</option>
+        <option value="draft">Borrador</option>
+        <option value="scheduled">Programado</option>
+        <option value="published">Publicado</option>
+        <option value="partial">Parcial</option>
+        <option value="failed">Fallido</option>
+      </select>
+    </div>
+
+    <div id="posts-list" class="posts-list">
+      <div class="empty-state">Cargando posts...</div>
+    </div>
+  </section>
+
+  <!-- ── CREATE / EDIT POST ── -->
+  <section id="view-create" class="view">
+    <div class="section-header">
+      <h1 id="form-title">Nuevo Post</h1>
+      <button class="btn btn-ghost" id="btn-cancel-form">← Volver</button>
+    </div>
+
+    <form id="post-form" class="card form-card">
+      <input type="hidden" id="edit-post-id" />
+
+      <div class="form-group">
+        <label class="label">Caption / Texto</label>
+        <textarea id="f-caption" class="textarea" rows="5" placeholder="Escribe el texto de tu post..."></textarea>
+        <span class="char-count" id="char-count">0 caracteres</span>
+      </div>
+
+      <div class="form-group">
+        <label class="label">Plataformas</label>
+        <div class="platform-grid">
+          <label class="platform-toggle">
+            <input type="checkbox" name="platform" value="meta_facebook" />
+            <span class="platform-pill platform-fb">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M18 2h-3a5 5 0 00-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 011-1h3z"/></svg>
+              Facebook
+            </span>
+          </label>
+          <label class="platform-toggle">
+            <input type="checkbox" name="platform" value="meta_instagram" />
+            <span class="platform-pill platform-ig">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"/><path d="M16 11.37A4 4 0 1112.63 8 4 4 0 0116 11.37z"/><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/></svg>
+              Instagram
+            </span>
+          </label>
+          <label class="platform-toggle">
+            <input type="checkbox" name="platform" value="twitter" />
+            <span class="platform-pill platform-x">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
+              X / Twitter
+            </span>
+          </label>
+          <label class="platform-toggle">
+            <input type="checkbox" name="platform" value="tiktok" />
+            <span class="platform-pill platform-tt">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M19.59 6.69a4.83 4.83 0 01-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 01-2.88 2.5 2.89 2.89 0 01-2.89-2.89 2.89 2.89 0 012.89-2.89c.28 0 .54.04.79.1V9.01a6.33 6.33 0 00-.79-.05 6.34 6.34 0 00-6.34 6.34 6.34 6.34 0 006.34 6.34 6.34 6.34 0 006.33-6.34V8.69a8.17 8.17 0 004.77 1.52V6.75a4.85 4.85 0 01-1-.06z"/></svg>
+              TikTok
+            </span>
+          </label>
+          <label class="platform-toggle">
+            <input type="checkbox" name="platform" value="youtube" />
+            <span class="platform-pill platform-yt">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M22.54 6.42a2.78 2.78 0 00-1.95-1.96C18.88 4 12 4 12 4s-6.88 0-8.59.46a2.78 2.78 0 00-1.95 1.96A29 29 0 001 12a29 29 0 00.46 5.58a2.78 2.78 0 001.95 1.95C5.12 20 12 20 12 20s6.88 0 8.59-.47a2.78 2.78 0 001.95-1.95A29 29 0 0023 12a29 29 0 00-.46-5.58z"/><polygon points="9.75 15.02 15.5 12 9.75 8.98 9.75 15.02" fill="white"/></svg>
+              YouTube
+            </span>
+          </label>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label class="label">Archivos adjuntos</label>
+        <div class="media-picker" id="media-picker">
+          <div class="media-picker-empty" id="media-picker-empty">
+            <span>Haz clic para seleccionar archivos de tu biblioteca</span>
+          </div>
+          <div class="media-picker-selected" id="media-picker-selected"></div>
+          <button type="button" class="btn btn-ghost btn-sm" id="btn-open-picker">
+            + Seleccionar desde biblioteca
+          </button>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label class="label">Programar publicación</label>
+        <div class="schedule-row">
+          <label class="radio-label">
+            <input type="radio" name="schedule" value="now" checked />
+            <span>Publicar ahora</span>
+          </label>
+          <label class="radio-label">
+            <input type="radio" name="schedule" value="later" />
+            <span>Programar para después</span>
+          </label>
+        </div>
+        <input type="datetime-local" id="f-scheduled-at" class="input" style="display:none;margin-top:8px" />
+      </div>
+
+      <div class="form-actions">
+        <button type="button" class="btn btn-ghost" id="btn-save-draft">Guardar borrador</button>
+        <button type="submit" class="btn btn-primary" id="btn-publish">
+          <span id="btn-publish-text">Publicar</span>
+        </button>
+      </div>
+    </form>
+  </section>
+
+  <!-- ── MEDIA LIBRARY ── -->
+  <section id="view-media" class="view">
+    <div class="section-header">
+      <h1>Biblioteca de Media</h1>
+      <button class="btn btn-primary" id="btn-upload-trigger">+ Subir archivos</button>
+    </div>
+
+    <input type="file" id="file-input" multiple accept="image/*,video/*" style="display:none" />
+
+    <div class="upload-zone" id="upload-zone">
+      <div class="upload-zone-inner">
+        <div class="upload-icon">📁</div>
+        <p>Arrastra archivos aquí o <button type="button" class="link-btn" id="btn-upload-trigger2">selecciona</button></p>
+        <p class="upload-hint">Imágenes (JPG, PNG, GIF, WebP) y Videos (MP4, MOV, WebM) — máx. 500 MB</p>
+      </div>
+    </div>
+
+    <div class="upload-progress" id="upload-progress" style="display:none">
+      <div class="progress-bar"><div class="progress-fill" id="progress-fill"></div></div>
+      <span id="progress-text">Subiendo...</span>
+    </div>
+
+    <div class="media-filter">
+      <button class="filter-btn active" data-filter="all">Todo</button>
+      <button class="filter-btn" data-filter="image">Imágenes</button>
+      <button class="filter-btn" data-filter="video">Videos</button>
+    </div>
+
+    <div id="media-grid" class="media-grid">
+      <div class="empty-state">Cargando biblioteca...</div>
+    </div>
+  </section>
+
+  <!-- ── CONFIG ── -->
+  <section id="view-config" class="view">
+    <div class="section-header">
+      <h1>Configuración de Plataformas</h1>
+    </div>
+
+    <div class="config-info card">
+      <p>Ingresa las credenciales de cada plataforma. Los tokens se guardan localmente en la base de datos de tu máquina. Nunca se envían a ningún servidor externo excepto al publicar.</p>
+    </div>
+
+    <div id="platform-configs" class="platform-configs">
+      <!-- Generado por JS -->
+    </div>
+  </section>
+
+</main>
+
+<!-- ── MODAL: Media Picker ── -->
+<div id="modal-picker" class="modal hidden">
+  <div class="modal-backdrop" id="modal-picker-backdrop"></div>
+  <div class="modal-box">
+    <div class="modal-header">
+      <h2>Seleccionar archivos</h2>
+      <button class="modal-close" id="modal-picker-close">✕</button>
+    </div>
+    <div id="modal-media-grid" class="media-grid modal-grid"></div>
+    <div class="modal-footer">
+      <span id="picker-count">0 seleccionados</span>
+      <button class="btn btn-primary" id="btn-picker-confirm">Confirmar selección</button>
+    </div>
+  </div>
+</div>
+
+<!-- ── TOAST ── -->
+<div id="toast-container" class="toast-container"></div>
+
+<script src="/js/app.js"></script>
+</body>
+</html>
