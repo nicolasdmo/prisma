@@ -29,6 +29,14 @@ function verifyMpSignature(req: NextRequest, dataId: string): boolean {
   const v1 = parts.v1;
   if (!ts || !v1) return false;
 
+  // Replay protection: reject signatures older/newer than 5 minutes.
+  // MP's ts is in milliseconds.
+  const tsMs = Number(ts);
+  if (!Number.isFinite(tsMs) || Math.abs(Date.now() - tsMs) > 5 * 60_000) {
+    console.error('[webhook/mp] Signature timestamp out of tolerance');
+    return false;
+  }
+
   const manifest = `id:${dataId.toLowerCase()};request-id:${requestId};ts:${ts};`;
   const hmac     = crypto.createHmac('sha256', secret).update(manifest).digest('hex');
 

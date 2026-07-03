@@ -29,7 +29,9 @@ export default async function ExitoPage({ params, searchParams }: Props) {
   if (!archetype) notFound();
 
   // MP sometimes uses payment_id, sometimes collection_id
-  const paymentId = sp.payment_id || sp.collection_id;
+  const rawPaymentId = sp.payment_id || sp.collection_id;
+  // MP payment ids are numeric — don't waste an MP API call on junk input.
+  const paymentId = rawPaymentId && /^\d{5,30}$/.test(rawPaymentId) ? rawPaymentId : undefined;
 
   // Try to verify the payment server-side and redirect straight to the report.
   // This is the happy path → no email needed, instant access.

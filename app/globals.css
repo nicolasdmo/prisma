@@ -1,4 +1,7 @@
 @import "tailwindcss";
+/* Tailwind 4 no carga el config JS automáticamente — sin esta línea,
+   todo el theme custom (ink/bg/line, rounded-pill, max-w-content) muere. */
+@config "../tailwind.config.ts";
 
 :root {
   --bg:        #F4F1EA;

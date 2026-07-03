@@ -12,7 +12,7 @@ export async function POST(req: NextRequest) {
     }
 
     const { code } = await req.json();
-    const upper = code?.toUpperCase();
+    const upper = typeof code === 'string' ? code.toUpperCase() : '';
     const archetype = ARCHETYPES[upper];
 
     if (!archetype) {
@@ -47,6 +47,9 @@ export async function POST(req: NextRequest) {
         auto_return: 'approved',
         external_reference: upper,
         statement_descriptor: 'PRISMA TEST',
+        // Explicit per-preference webhook target — delivery no longer depends
+        // solely on the app-level webhook configured in the MP panel.
+        notification_url: `${SITE_URL}/api/webhook/mp`,
       },
     });
 

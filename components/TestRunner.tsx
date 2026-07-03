@@ -19,7 +19,7 @@ const AXIS: Record<string, AxisStyle> = {
 const grad = (a: AxisStyle) => `linear-gradient(135deg, ${a.c1}, ${a.c2})`;
 const BG = '#070611';
 
-type Phase = 'intro' | 'quiz' | 'computing' | 'reveal';
+type Phase = 'quiz' | 'computing' | 'reveal';
 
 export default function TestRunner() {
   const router = useRouter();
