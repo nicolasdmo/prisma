@@ -3,7 +3,11 @@
 
 import { writeFileSync } from 'fs';
 
-const API_KEY = 'AIzaSyAeDPWiRY2B6Q_wByHKKDE8WqXNBB_UG68';
+const API_KEY = process.env.GEMINI_API_KEY;
+if (!API_KEY) {
+  console.error('❌ Falta GEMINI_API_KEY. Ejecutar: GEMINI_API_KEY=... node scripts/generate-premium.mjs');
+  process.exit(1);
+}
 const MODEL   = 'nano-banana-pro-preview';
 const URL     = `https://generativelanguage.googleapis.com/v1beta/models/${MODEL}:generateContent?key=${API_KEY}`;
 
